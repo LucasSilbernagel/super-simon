@@ -10,7 +10,7 @@ export default function CommonWrapper({
     <RootLayout>
       <Header />
       <main>{children}</main>
-      <footer>
+      <footer className="pb-4">
         <p className="text-center">
           Built by{' '}
           <a

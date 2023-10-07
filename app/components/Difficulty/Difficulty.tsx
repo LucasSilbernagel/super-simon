@@ -25,7 +25,7 @@ export default function Difficulty() {
                     | 'HARD'
                     | 'SUPER SIMON'
                   dispatch(updateDifficulty({ value: selectedDifficulty }))
-                  dispatch(updateGameStatus({ value: 'STARTED' }))
+                  dispatch(updateGameStatus({ value: 'UNSTARTED' }))
                 }}
                 className="uppercase bg-black p-2 rounded-md"
               >
