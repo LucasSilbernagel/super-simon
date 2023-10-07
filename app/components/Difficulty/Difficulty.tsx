@@ -12,11 +12,11 @@ export default function Difficulty() {
 
   if (gameStatus.value === 'PAGELOAD') {
     return (
-      <div>
-        <h3>Select a difficulty</h3>
+      <div className="mx-auto mb-36 mt-16 max-w-max text-center">
+        <h3 className="text-2xl mb-8">Select a difficulty:</h3>
         <ul>
           {difficulties.map((difficulty) => (
-            <li key={difficulty}>
+            <li key={difficulty} className="mb-4">
               <button
                 onClick={() => {
                   const selectedDifficulty = difficulty.toUpperCase() as
@@ -27,6 +27,7 @@ export default function Difficulty() {
                   dispatch(updateDifficulty({ value: selectedDifficulty }))
                   dispatch(updateGameStatus({ value: 'STARTED' }))
                 }}
+                className="uppercase bg-black p-2 rounded-md"
               >
                 {difficulty}
               </button>
