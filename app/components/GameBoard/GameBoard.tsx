@@ -11,29 +11,26 @@ export default function GameBoard() {
 
   const areWedgesDisabled = gameStatus.value === 'UNSTARTED'
 
+  const wedges = [
+    'bg-green-500 top-0 left-0',
+    'bg-red-500 top-0 right-0',
+    'bg-yellow-500 bottom-0 left-0',
+    'bg-blue-500 bottom-0 right-0',
+  ]
+
   if (gameStatus.value !== 'PAGELOAD') {
     return (
       <div className="GameBoard">
-        <button
-          id="green"
-          disabled={areWedgesDisabled}
-          className="GameBoard__wedge bg-green-500 top-0 left-0"
-        />
-        <button
-          id="red"
-          disabled={areWedgesDisabled}
-          className="GameBoard__wedge bg-red-500 top-0 right-0"
-        />
-        <button
-          id="yellow"
-          disabled={areWedgesDisabled}
-          className="GameBoard__wedge bg-yellow-500 bottom-0 left-0"
-        />
-        <button
-          id="blue"
-          disabled={areWedgesDisabled}
-          className="GameBoard__wedge bg-blue-500 bottom-0 right-0"
-        />
+        {wedges.map((wedge, index) => {
+          return (
+            <button
+              key={wedge.replaceAll(' ', '-')}
+              id={`${index}`}
+              disabled={areWedgesDisabled}
+              className={`GameBoard__wedge ${wedge}`}
+            />
+          )
+        })}
         {gameStatus.value === 'UNSTARTED' && (
           <button
             onClick={() => dispatch(updateGameStatus({ value: 'STARTED' }))}
