@@ -4,11 +4,15 @@ import { updateGameStatus } from '@/app/redux/features/gameStatusSlice'
 import { useAppDispatch, useAppSelector } from '../../redux/hooks'
 import './GameBoard.css'
 import { useEffect, useState } from 'react'
+import * as Tone from 'tone'
 
 export default function GameBoard() {
   const gameStatus = useAppSelector((state) => state.gameStatusReducer)
 
   const dispatch = useAppDispatch()
+
+  // create a synth and connect it to the main output (speakers)
+  const synth = new Tone.Synth().toDestination()
 
   const [lastClickedWedge, setLastClickedWedge] = useState<string>('')
 
@@ -21,8 +25,11 @@ export default function GameBoard() {
     'bg-blue-500 bottom-0 right-0',
   ]
 
+  const tones = { '0': 'F3', '1': 'D3', '2': 'B3', '3': 'G3' }
+
   const handleWedgeClick = (id: string) => {
     setLastClickedWedge(id)
+    synth.triggerAttackRelease(tones[id as keyof typeof tones], '16n')
   }
 
   useEffect(() => {
