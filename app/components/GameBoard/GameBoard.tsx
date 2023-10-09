@@ -6,9 +6,11 @@ import './GameBoard.css'
 import { useEffect, useState } from 'react'
 import * as Tone from 'tone'
 import { getRandomInteger } from '@/app/utils/getRandomInteger'
+import { Difficulty } from '../Difficulty/Difficulty'
 
 export default function GameBoard() {
   const gameStatus = useAppSelector((state) => state.gameStatusReducer)
+  const selectedDifficulty = useAppSelector((state) => state.difficultyReducer)
 
   const dispatch = useAppDispatch()
 
@@ -53,6 +55,19 @@ export default function GameBoard() {
     }
   }, [lastClickedWedge, setLastClickedWedge])
 
+  const getDifficultySpeed = (difficulty: Difficulty) => {
+    switch (difficulty) {
+      case 'EASY':
+        return 800
+      case 'NORMAL':
+        return 600
+      case 'HARD':
+        return 300
+      case 'SUPER SIMON':
+        return 300
+    }
+  }
+
   const playBotSequence = async () => {
     for (const item of botSequence) {
       await new Promise((resolve) => {
@@ -61,12 +76,12 @@ export default function GameBoard() {
           synth.triggerAttackRelease(tones[item as keyof typeof tones], '16n')
           resolve(undefined)
           setTimeout(() => setBotClick(''), 500)
-        }, 800)
+        }, getDifficultySpeed(selectedDifficulty.value))
       })
     }
     setTimeout(() => {
       setBotClick('')
-    }, 800)
+    }, getDifficultySpeed(selectedDifficulty.value))
   }
 
   useEffect(() => {
@@ -82,11 +97,13 @@ export default function GameBoard() {
     if (gameStatus.value === 'STARTED') {
       if (botSequence.length > playerScore) {
         setIsPlayingBotSequence(true)
-        playBotSequence()
-          .then(() => setIsPlayingBotSequence(false))
-          .catch((error) => {
-            console.error(error)
-          })
+        setTimeout(() => {
+          playBotSequence()
+            .then(() => setIsPlayingBotSequence(false))
+            .catch((error) => {
+              console.error(error)
+            })
+        }, 500)
       }
     }
   }, [gameStatus.value, botSequence, playerScore])
