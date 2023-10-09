@@ -23,8 +23,10 @@ export default function GameBoard() {
   const [playerSequence, setPlayerSequence] = useState<string[]>([])
   const [botClick, setBotClick] = useState<string>('')
   const [playerScore, setPlayerScore] = useState(0)
+  const [isPlayingBotSequence, setIsPlayingBotSequence] = useState(false)
 
-  const areWedgesDisabled = gameStatus.value === 'UNSTARTED'
+  const areWedgesDisabled =
+    gameStatus.value === 'UNSTARTED' || isPlayingBotSequence
 
   const wedges = [
     'bg-green-500 top-0 left-0',
@@ -58,6 +60,7 @@ export default function GameBoard() {
           setBotClick(item)
           synth.triggerAttackRelease(tones[item as keyof typeof tones], '16n')
           resolve(undefined)
+          setTimeout(() => setBotClick(''), 500)
         }, 800)
       })
     }
@@ -78,9 +81,12 @@ export default function GameBoard() {
   useEffect(() => {
     if (gameStatus.value === 'STARTED') {
       if (botSequence.length > playerScore) {
-        playBotSequence().catch((error) => {
-          console.error(error)
-        })
+        setIsPlayingBotSequence(true)
+        playBotSequence()
+          .then(() => setIsPlayingBotSequence(false))
+          .catch((error) => {
+            console.error(error)
+          })
       }
     }
   }, [gameStatus.value, botSequence, playerScore])

@@ -3,31 +3,45 @@
 import { updateGameStatus } from '@/app/redux/features/gameStatusSlice'
 import { updateDifficulty } from '@/app/redux/features/difficultySlice'
 import { useAppDispatch, useAppSelector } from '../../redux/hooks'
+import './Difficulty.css'
+
+export type Difficulty = 'EASY' | 'NORMAL' | 'HARD' | 'SUPER SIMON'
 
 export default function Difficulty() {
   const gameStatus = useAppSelector((state) => state.gameStatusReducer)
   const dispatch = useAppDispatch()
 
-  const difficulties = ['Easy', 'Normal', 'Hard', 'Super Simon']
+  const difficulties = ['EASY', 'NORMAL', 'HARD', 'SUPER SIMON']
+
+  const getButtonColour = (difficulty: Difficulty) => {
+    switch (difficulty) {
+      case 'EASY':
+        return 'bg-green-500'
+      case 'NORMAL':
+        return 'bg-blue-500'
+      case 'HARD':
+        return 'bg-yellow-500'
+      case 'SUPER SIMON':
+        return 'bg-red-500'
+    }
+  }
 
   if (gameStatus.value === 'PAGELOAD') {
     return (
-      <div className="mx-auto mb-36 mt-16 max-w-max text-center">
-        <h3 className="text-2xl mb-8">Select a difficulty:</h3>
+      <div className="Difficulty">
+        <h3 className="text-3xl mb-8">Select a difficulty:</h3>
         <ul>
           {difficulties.map((difficulty) => (
-            <li key={difficulty} className="mb-4">
+            <li key={difficulty} className="mb-8">
               <button
                 onClick={() => {
-                  const selectedDifficulty = difficulty.toUpperCase() as
-                    | 'EASY'
-                    | 'NORMAL'
-                    | 'HARD'
-                    | 'SUPER SIMON'
+                  const selectedDifficulty = difficulty as Difficulty
                   dispatch(updateDifficulty({ value: selectedDifficulty }))
                   dispatch(updateGameStatus({ value: 'UNSTARTED' }))
                 }}
-                className="uppercase bg-black p-2 rounded-md"
+                className={`Difficulty__button ${getButtonColour(
+                  difficulty as Difficulty
+                )}`}
               >
                 {difficulty}
               </button>
