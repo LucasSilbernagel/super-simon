@@ -144,9 +144,14 @@ export default function GameBoard() {
     }
   }, [gameStatus.value, botSequence, playerScore, playerSequence])
 
+  const isSuperSimonMode =
+    gameStatus.value === 'STARTED' && selectedDifficulty.value === 'SUPER SIMON'
+
   if (gameStatus.value !== 'PAGELOAD' && gameStatus.value !== 'FINISHED') {
     return (
-      <div className="GameBoard">
+      <div
+        className={`GameBoard ${isSuperSimonMode ? 'GameBoard--rotating' : ''}`}
+      >
         {wedges.map((wedge, index) => {
           return (
             <button
@@ -171,8 +176,12 @@ export default function GameBoard() {
           </button>
         )}
         {gameStatus.value === 'STARTED' && (
-          <div className="GameBoard__score">
-            <div>100</div>
+          <div
+            className={`GameBoard__score ${
+              isSuperSimonMode ? 'GameBoard__score--rotating' : ''
+            }`}
+          >
+            <div>{playerScore}</div>
           </div>
         )}
       </div>
