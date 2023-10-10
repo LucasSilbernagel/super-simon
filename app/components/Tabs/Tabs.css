@@ -1,0 +1,49 @@
+.TabsWrapper {
+  @apply border-b border-gray-500 flex;
+  border-bottom-style: solid;
+}
+
+.Tabs__dropdown-toggle, .Tabs__button, .Tabs__dropdown-button {
+  @apply  bg-white cursor-pointer text-base border-none text-black;
+  white-space: nowrap;
+}
+
+.Tabs__button {
+  @apply transition-all p-4 relative;
+}
+
+.Tabs__button:after {
+  @apply absolute h-[3px] bottom-[-1px] w-full left-0 right-0 transition-colors;
+  content: '';
+}
+
+.Tabs__button--active:after {
+  @apply bg-gray-800;
+}
+
+.Tabs__button--active,
+.Tabs__button:hover, 
+.Tabs__button:focus {
+  @apply text-gray-800;
+}
+
+.Tabs__dropdown-menu {
+  @apply pl-0 bg-white absolute rounded-[5px] list-none top-[calc(100%-0.5rem)] right-0 border-separate;
+  box-shadow: 0px 2px 22px rgba(0, 0, 0, 0.08), 0px 2px 26px 1px rgba(0, 0, 0, 0.04);
+}
+
+.Tabs__dropdown-toggle--active {
+  @apply text-gray-800;
+}
+
+.Tabs__dropdown-button {
+  @apply px-3 py-2 w-full text-left;
+}
+
+.Tabs__dropdown-button--active, .Tabs__dropdown-button:hover, .Tabs__dropdown-button:focus {
+  @apply bg-gray-100;
+}
+
+.Tabs__dropdown-button:focus-visible {
+  @apply outline outline-blue-400;
+}
