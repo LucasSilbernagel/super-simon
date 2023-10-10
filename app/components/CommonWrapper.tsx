@@ -17,7 +17,7 @@ export default function CommonWrapper({
             href="https://lucassilbernagel.com/"
             target="_blank"
             rel="noreferrer"
-            className="underline underline-offset-2 hover:underline-offset-4 focus-visible:underline-offset-4 transition-all"
+            className="Link"
           >
             Lucas Silbernagel
           </a>
