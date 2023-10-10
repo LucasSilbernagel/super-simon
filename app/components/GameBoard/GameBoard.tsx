@@ -7,12 +7,26 @@ import { useEffect, useState } from 'react'
 import * as Tone from 'tone'
 import { getRandomInteger } from '@/app/utils/getRandomInteger'
 import { Difficulty } from '../Difficulty/Difficulty'
+import Modal from 'react-modal'
+import { FaTimes } from 'react-icons/fa'
 
 export default function GameBoard() {
   const gameStatus = useAppSelector((state) => state.gameStatusReducer)
   const selectedDifficulty = useAppSelector((state) => state.difficultyReducer)
 
   const dispatch = useAppDispatch()
+
+  const modalStyles = {
+    overlay: {
+      backgroundColor: 'rgba(0, 0, 0, 0.3)',
+    },
+    content: {
+      top: '40%',
+      left: '50%',
+      right: 'auto',
+      bottom: 'auto',
+    },
+  }
 
   // create a synth and connect it to the main output (speakers)
   let synth: Tone.Synth<Tone.SynthOptions>
@@ -26,9 +40,12 @@ export default function GameBoard() {
   const [botClick, setBotClick] = useState<string>('')
   const [playerScore, setPlayerScore] = useState(0)
   const [isPlayingBotSequence, setIsPlayingBotSequence] = useState(false)
+  const [isModalOpen, setIsModalOpen] = useState(false)
 
   const areWedgesDisabled =
-    gameStatus.value === 'UNSTARTED' || isPlayingBotSequence
+    gameStatus.value === 'UNSTARTED' ||
+    isPlayingBotSequence ||
+    gameStatus.value === 'FINISHED'
 
   const wedges = [
     'bg-green-500 top-0 left-0',
@@ -46,6 +63,16 @@ export default function GameBoard() {
     newPlayerSequence.push(id)
     setPlayerSequence(newPlayerSequence)
   }
+
+  useEffect(() => {
+    Modal.setAppElement('body')
+  }, [])
+
+  useEffect(() => {
+    if (isModalOpen) {
+      document.body.style.overflowY = 'hidden'
+    }
+  }, [isModalOpen])
 
   useEffect(() => {
     if (lastClickedWedge.length > 0) {
@@ -75,7 +102,13 @@ export default function GameBoard() {
           setBotClick(item)
           synth.triggerAttackRelease(tones[item as keyof typeof tones], '16n')
           resolve(undefined)
-          setTimeout(() => setBotClick(''), 500)
+          setTimeout(
+            () => setBotClick(''),
+            selectedDifficulty.value === 'EASY' ||
+              selectedDifficulty.value === 'NORMAL'
+              ? 500
+              : 200
+          )
         }, getDifficultySpeed(selectedDifficulty.value))
       })
     }
@@ -139,7 +172,7 @@ export default function GameBoard() {
         !playerSequence.every((item, index) => botSequence[index] === item)
       ) {
         dispatch(updateGameStatus({ value: 'FINISHED' }))
-        alert(`Game over! Score: ${playerScore}`)
+        setIsModalOpen(true)
       }
     }
   }, [gameStatus.value, botSequence, playerScore, playerSequence])
@@ -147,44 +180,86 @@ export default function GameBoard() {
   const isSuperSimonMode =
     gameStatus.value === 'STARTED' && selectedDifficulty.value === 'SUPER SIMON'
 
-  if (gameStatus.value !== 'PAGELOAD' && gameStatus.value !== 'FINISHED') {
-    return (
-      <div
-        className={`GameBoard ${isSuperSimonMode ? 'GameBoard--rotating' : ''}`}
-      >
-        {wedges.map((wedge, index) => {
-          return (
+  return (
+    <>
+      {gameStatus.value !== 'PAGELOAD' && (
+        <div
+          className={`GameBoard ${
+            isSuperSimonMode ? 'GameBoard--rotating' : ''
+          }`}
+        >
+          {wedges.map((wedge, index) => {
+            return (
+              <button
+                key={wedge.replaceAll(' ', '-')}
+                id={`${index}`}
+                disabled={areWedgesDisabled}
+                className={`GameBoard__wedge ${wedge} ${
+                  lastClickedWedge === String(index) ||
+                  botClick === String(index)
+                    ? 'opacity-100'
+                    : 'opacity-75'
+                }`}
+                onClick={() => handleWedgeClick(String(index))}
+              />
+            )
+          })}
+          {gameStatus.value === 'UNSTARTED' && (
             <button
-              key={wedge.replaceAll(' ', '-')}
-              id={`${index}`}
-              disabled={areWedgesDisabled}
-              className={`GameBoard__wedge ${wedge} ${
-                lastClickedWedge === String(index) || botClick === String(index)
-                  ? 'opacity-100'
-                  : 'opacity-75'
+              onClick={() => dispatch(updateGameStatus({ value: 'STARTED' }))}
+              className="GameBoard__start-button"
+            >
+              Start
+            </button>
+          )}
+          {(gameStatus.value === 'STARTED' ||
+            gameStatus.value === 'FINISHED') && (
+            <div
+              className={`GameBoard__score ${
+                isSuperSimonMode ? 'GameBoard__score--rotating' : ''
               }`}
-              onClick={() => handleWedgeClick(String(index))}
-            />
-          )
-        })}
-        {gameStatus.value === 'UNSTARTED' && (
-          <button
-            onClick={() => dispatch(updateGameStatus({ value: 'STARTED' }))}
-            className="GameBoard__start-button"
-          >
-            Start
-          </button>
-        )}
-        {gameStatus.value === 'STARTED' && (
-          <div
-            className={`GameBoard__score ${
-              isSuperSimonMode ? 'GameBoard__score--rotating' : ''
-            }`}
-          >
-            <div>{playerScore}</div>
+            >
+              <div>{playerScore}</div>
+            </div>
+          )}
+        </div>
+      )}
+      <Modal
+        isOpen={isModalOpen}
+        onRequestClose={() => {
+          setIsModalOpen(false)
+        }}
+        style={modalStyles}
+      >
+        <div>
+          <div className="w-full flex justify-end">
+            <button
+              aria-label="Close modal"
+              onClick={() => setIsModalOpen(false)}
+              className="text-2xl hover:scale-105"
+            >
+              <FaTimes />
+            </button>
           </div>
-        )}
-      </div>
-    )
-  } else return null
+          <h3 className="text-4xl uppercase font-bold mt-6 text-center">
+            Game over!
+          </h3>
+          <h4 className="text-center text-3xl my-4">Score: {playerScore}</h4>
+          <div className="text-center my-2">
+            <button
+              onClick={() => {
+                dispatch(updateGameStatus({ value: 'PAGELOAD' }))
+                setPlayerScore(0)
+                setPlayerSequence([])
+                setBotSequence([])
+                setIsModalOpen(false)
+              }}
+            >
+              Play again?
+            </button>
+          </div>
+        </div>
+      </Modal>
+    </>
+  )
 }
