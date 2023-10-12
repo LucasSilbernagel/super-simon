@@ -48,10 +48,10 @@ export default function GameBoard() {
     gameStatus.value === 'FINISHED'
 
   const wedges = [
-    'bg-green-500 top-0 left-0',
-    'bg-red-500 top-0 right-0',
-    'bg-yellow-500 bottom-0 left-0',
-    'bg-blue-500 bottom-0 right-0',
+    { label: 'green', style: 'bg-green-500 top-0 left-0' },
+    { label: 'red', style: 'bg-red-500 top-0 right-0' },
+    { label: 'yellow', style: 'bg-yellow-500 bottom-0 left-0' },
+    { label: 'blue', style: 'bg-blue-500 bottom-0 right-0' },
   ]
 
   const tones = { '0': 'F3', '1': 'D3', '2': 'B3', '3': 'G3' }
@@ -66,6 +66,7 @@ export default function GameBoard() {
 
   useEffect(() => {
     Modal.setAppElement('body')
+    dispatch(updateGameStatus({ value: 'PAGELOAD' }))
   }, [])
 
   useEffect(() => {
@@ -191,22 +192,29 @@ export default function GameBoard() {
           {wedges.map((wedge, index) => {
             return (
               <button
-                key={wedge.replaceAll(' ', '-')}
+                key={wedge.style.replaceAll(' ', '-')}
                 id={`${index}`}
                 disabled={areWedgesDisabled}
-                className={`GameBoard__wedge ${wedge} ${
+                className={`GameBoard__wedge ${wedge.style} ${
                   lastClickedWedge === String(index) ||
                   botClick === String(index)
                     ? 'opacity-100'
                     : 'opacity-75'
                 }`}
                 onClick={() => handleWedgeClick(String(index))}
+                aria-label={wedge.label}
               />
             )
           })}
           {gameStatus.value === 'UNSTARTED' && (
             <button
-              onClick={() => dispatch(updateGameStatus({ value: 'STARTED' }))}
+              onClick={() => {
+                setPlayerScore(0)
+                setPlayerSequence([])
+                setBotSequence([])
+                setIsModalOpen(false)
+                dispatch(updateGameStatus({ value: 'STARTED' }))
+              }}
               className="GameBoard__start-button"
             >
               Start
@@ -227,6 +235,10 @@ export default function GameBoard() {
       <Modal
         isOpen={isModalOpen}
         onRequestClose={() => {
+          dispatch(updateGameStatus({ value: 'PAGELOAD' }))
+          setPlayerScore(0)
+          setPlayerSequence([])
+          setBotSequence([])
           setIsModalOpen(false)
         }}
         style={modalStyles}
@@ -235,7 +247,13 @@ export default function GameBoard() {
           <div className="w-full flex justify-end">
             <button
               aria-label="Close modal"
-              onClick={() => setIsModalOpen(false)}
+              onClick={() => {
+                dispatch(updateGameStatus({ value: 'PAGELOAD' }))
+                setPlayerScore(0)
+                setPlayerSequence([])
+                setBotSequence([])
+                setIsModalOpen(false)
+              }}
               className="text-2xl hover:scale-105"
             >
               <FaTimes />
@@ -254,6 +272,7 @@ export default function GameBoard() {
                 setBotSequence([])
                 setIsModalOpen(false)
               }}
+              className="Link"
             >
               Play again?
             </button>
