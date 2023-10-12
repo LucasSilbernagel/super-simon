@@ -3,8 +3,9 @@
 import getCollection from '@/app/firebase/getData'
 import Tabs from '../Tabs/Tabs'
 import { useEffect, useState } from 'react'
+import { getTabsFromFirebase } from '@/app/utils/getTabsFromFirebase'
 
-interface ILeaderboardCollection {
+export interface ILeaderboardCollection {
   [key: string]: { id: string; player: string; score: number }[]
 }
 
@@ -32,74 +33,29 @@ const Leaderboard = () => {
     fetchAllCollections()
   }, [])
 
-  console.log(allCollectionData)
-
   if (allCollectionData) {
     return (
       <div className="max-w-max mx-auto bg-white text-black my-12 p-8 rounded-md">
         <Tabs
-          tabs={[
-            {
-              label: 'EASY',
+          tabs={getTabsFromFirebase(allCollectionData).map((tab) => {
+            return {
+              label: tab.label,
               content: (
-                <ol className="list-decimal">
-                  {allCollectionData['easy'].map((document) => {
-                    return (
-                      <li key={document.id}>
-                        <span>Player:</span> {document.player} -{' '}
-                        <span>Score:</span> {document.score}
-                      </li>
-                    )
-                  })}
+                <ol className="list-decimal max-w-max mx-auto pt-4">
+                  {tab.content
+                    .sort((a, b) => b.score - a.score)
+                    .map((document) => {
+                      return (
+                        <li key={document.id} className="mb-2">
+                          {document.player} - {document.score}{' '}
+                          {document.score === 1 ? 'point' : 'points'}
+                        </li>
+                      )
+                    })}
                 </ol>
               ),
-            },
-            {
-              label: 'NORMAL',
-              content: (
-                <ol className="list-decimal">
-                  {allCollectionData['normal'].map((document) => {
-                    return (
-                      <li key={document.id}>
-                        <span>Player:</span> {document.player} -{' '}
-                        <span>Score:</span> {document.score}
-                      </li>
-                    )
-                  })}
-                </ol>
-              ),
-            },
-            {
-              label: 'HARD',
-              content: (
-                <ol className="list-decimal">
-                  {allCollectionData['hard'].map((document) => {
-                    return (
-                      <li key={document.id}>
-                        <span>Player:</span> {document.player} -{' '}
-                        <span>Score:</span> {document.score}
-                      </li>
-                    )
-                  })}
-                </ol>
-              ),
-            },
-            {
-              label: 'SUPER SIMON',
-              content: (
-                <ol className="list-decimal">
-                  {allCollectionData['super-simon'].map((document) => {
-                    return (
-                      <li key={document.id}>
-                        <span>Player:</span> {document.player} -{' '}
-                        <span>Score:</span> {document.score}
-                      </li>
-                    )
-                  })}
-                </ol>
-              ),
-            },
-          ]}
+            }
+          })}
         />
       </div>
     )
