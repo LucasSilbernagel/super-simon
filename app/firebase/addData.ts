@@ -1,23 +1,22 @@
 import firebase_app from './config'
-import { getFirestore, doc, setDoc } from 'firebase/firestore'
+import { getFirestore, collection, addDoc } from 'firebase/firestore'
 
 const db = getFirestore(firebase_app)
-export default async function addData(
-  colllection: string,
-  id: string,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  data: any
+
+export default async function addToCollection(
+  collectionName: string,
+  newItem: { player: string; score: number }
 ) {
-  let result = null
+  const collectionRef = collection(db, collectionName)
+
   let error = null
 
   try {
-    result = await setDoc(doc(db, colllection, id), data, {
-      merge: true,
-    })
+    const docRef = await addDoc(collectionRef, newItem)
+    console.log('Document written with ID: ', docRef.id)
   } catch (e) {
     error = e
   }
 
-  return { result, error }
+  return { error }
 }
