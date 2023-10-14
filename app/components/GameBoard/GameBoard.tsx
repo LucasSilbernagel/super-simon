@@ -9,6 +9,7 @@ import { getRandomInteger } from '@/app/utils/getRandomInteger'
 import { Difficulty } from '../Difficulty/Difficulty'
 import Modal from 'react-modal'
 import { FaTimes } from 'react-icons/fa'
+import getCollection from '@/app/firebase/getData'
 
 export default function GameBoard() {
   const gameStatus = useAppSelector((state) => state.gameStatusReducer)
@@ -41,6 +42,11 @@ export default function GameBoard() {
   const [playerScore, setPlayerScore] = useState(0)
   const [isPlayingBotSequence, setIsPlayingBotSequence] = useState(false)
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [categoryScores, setCategoryScores] = useState<
+    { id: string; player: string; score: number }[]
+  >([])
+  const [shouldReplaceRecord, setShouldReplaceRecord] = useState(false)
+  const [shouldPostNewRecord, setShouldPostNewRecord] = useState(false)
 
   const areWedgesDisabled =
     gameStatus.value === 'UNSTARTED' ||
@@ -178,6 +184,40 @@ export default function GameBoard() {
     }
   }, [gameStatus.value, botSequence, playerScore, playerSequence])
 
+  useEffect(() => {
+    const fetchCollectionData = async () => {
+      try {
+        const data = await getCollection(
+          selectedDifficulty.value.toLowerCase().replace(' ', '-')
+        )
+        setCategoryScores(data.results.sort((a, b) => b.score - a.score))
+      } catch (error) {
+        console.error(error)
+      }
+    }
+
+    fetchCollectionData()
+  }, [playerScore, selectedDifficulty.value])
+
+  useEffect(() => {
+    if (
+      categoryScores.length === 10 &&
+      categoryScores.some((score) => score.score < playerScore)
+    ) {
+      setShouldReplaceRecord(true)
+    } else {
+      setShouldReplaceRecord(false)
+    }
+  }, [categoryScores, playerScore])
+
+  useEffect(() => {
+    if (categoryScores.length < 10 && playerScore > 0) {
+      setShouldPostNewRecord(true)
+    } else {
+      setShouldPostNewRecord(false)
+    }
+  }, [categoryScores, playerScore])
+
   const isSuperSimonMode =
     gameStatus.value === 'STARTED' && selectedDifficulty.value === 'SUPER SIMON'
 
@@ -263,20 +303,24 @@ export default function GameBoard() {
             Game over!
           </h3>
           <h4 className="text-center text-3xl my-4">Score: {playerScore}</h4>
-          <div className="text-center my-2">
-            <button
-              onClick={() => {
-                dispatch(updateGameStatus({ value: 'PAGELOAD' }))
-                setPlayerScore(0)
-                setPlayerSequence([])
-                setBotSequence([])
-                setIsModalOpen(false)
-              }}
-              className="Link"
-            >
-              Play again?
-            </button>
-          </div>
+          {!shouldPostNewRecord && !shouldReplaceRecord && (
+            <div className="text-center my-2">
+              <button
+                onClick={() => {
+                  dispatch(updateGameStatus({ value: 'PAGELOAD' }))
+                  setPlayerScore(0)
+                  setPlayerSequence([])
+                  setBotSequence([])
+                  setIsModalOpen(false)
+                }}
+                className="Link"
+              >
+                Play again?
+              </button>
+            </div>
+          )}
+          {shouldPostNewRecord && <div></div>}
+          {shouldReplaceRecord && <div></div>}
         </div>
       </Modal>
     </>
