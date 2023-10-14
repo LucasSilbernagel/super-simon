@@ -44,6 +44,7 @@ const Leaderboard = () => {
                 <ol className="list-decimal max-w-max mx-auto pt-4">
                   {tab.content
                     .sort((a, b) => b.score - a.score)
+                    .slice(0, 10)
                     .map((document) => {
                       return (
                         <li key={document.id} className="mb-2">
