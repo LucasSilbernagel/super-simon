@@ -14,7 +14,7 @@ export default async function removeFromCollection(
 
   try {
     await deleteDoc(docRef)
-    console.log('Document with ID ', documentId, ' deleted.')
+    return { docRef }
   } catch (e) {
     error = e
   }

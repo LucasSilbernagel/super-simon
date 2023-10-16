@@ -3,15 +3,19 @@
 import { updateGameStatus } from '@/app/redux/features/gameStatusSlice'
 import { useAppDispatch, useAppSelector } from '../../redux/hooks'
 import './GameBoard.css'
-import { useEffect, useState } from 'react'
+import { FormEvent, useEffect, useState } from 'react'
 import * as Tone from 'tone'
 import { getRandomInteger } from '@/app/utils/getRandomInteger'
 import { Difficulty } from '../Difficulty/Difficulty'
 import Modal from 'react-modal'
 import { FaTimes } from 'react-icons/fa'
 import getCollection from '@/app/firebase/getData'
+import removeFromCollection from '@/app/firebase/removeData'
+import addToCollection from '@/app/firebase/addData'
+import { useRouter } from 'next/navigation'
 
 export default function GameBoard() {
+  const { push } = useRouter()
   const gameStatus = useAppSelector((state) => state.gameStatusReducer)
   const selectedDifficulty = useAppSelector((state) => state.difficultyReducer)
 
@@ -45,8 +49,8 @@ export default function GameBoard() {
   const [categoryScores, setCategoryScores] = useState<
     { id: string; player: string; score: number }[]
   >([])
-  const [shouldReplaceRecord, setShouldReplaceRecord] = useState(false)
   const [shouldPostNewRecord, setShouldPostNewRecord] = useState(false)
+  const [playerInitials, setPlayerInitials] = useState('')
 
   const areWedgesDisabled =
     gameStatus.value === 'UNSTARTED' ||
@@ -201,25 +205,79 @@ export default function GameBoard() {
 
   useEffect(() => {
     if (
-      categoryScores.length === 10 &&
-      categoryScores.some((score) => score.score < playerScore)
+      (categoryScores.length < 10 && playerScore > 0) ||
+      (categoryScores.length >= 10 &&
+        categoryScores.some((score) => score.score < playerScore))
     ) {
-      setShouldReplaceRecord(true)
-    } else {
-      setShouldReplaceRecord(false)
-    }
-  }, [categoryScores, playerScore])
-
-  useEffect(() => {
-    if (categoryScores.length < 10 && playerScore > 0) {
       setShouldPostNewRecord(true)
     } else {
       setShouldPostNewRecord(false)
     }
   }, [categoryScores, playerScore])
 
+  useEffect(() => {
+    if (categoryScores.length > 10) {
+      const sortedScores = categoryScores.sort((a, b) => b.score - a.score)
+      const lowestScores = sortedScores.slice(
+        11,
+        sortedScores.indexOf(sortedScores[sortedScores.length - 1])
+      )
+      lowestScores.forEach((score) => {
+        removeFromCollection(
+          selectedDifficulty.value.toLowerCase().replace(' ', '-'),
+          score.id
+        )
+          .then((result) => {
+            if (result.error) {
+              console.error('Error removing the document:', result.error)
+            }
+          })
+          .catch((error) => {
+            console.error('An error occurred:', error)
+          })
+      })
+    }
+  }, [categoryScores, selectedDifficulty])
+
   const isSuperSimonMode =
     gameStatus.value === 'STARTED' && selectedDifficulty.value === 'SUPER SIMON'
+
+  const addNewHighScore = (player: string) => {
+    addToCollection(selectedDifficulty.value.toLowerCase().replace(' ', '-'), {
+      player: player,
+      score: playerScore,
+    })
+      .then((result) => {
+        if (result.error) {
+          console.error('Error adding the document:', result.error)
+        }
+      })
+      .catch((error) => {
+        console.error('An error occurred:', error)
+      })
+  }
+
+  const handleInputChange = (e: { target: { value: string } }) => {
+    const inputText = e.target.value
+    const onlyLetters = inputText.replace(/[^A-Za-z]/g, '')
+    setPlayerInitials(onlyLetters)
+  }
+
+  const handleSubmitScore = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    if (playerInitials.length > 1) {
+      addNewHighScore(playerInitials)
+      setTimeout(() => {
+        setPlayerScore(0)
+        setPlayerSequence([])
+        setBotSequence([])
+        setIsModalOpen(false)
+        setPlayerInitials('')
+        push('/leaderboard')
+        dispatch(updateGameStatus({ value: 'PAGELOAD' }))
+      }, 100)
+    }
+  }
 
   return (
     <>
@@ -239,7 +297,7 @@ export default function GameBoard() {
                   lastClickedWedge === String(index) ||
                   botClick === String(index)
                     ? 'opacity-100'
-                    : 'opacity-75'
+                    : 'opacity-60'
                 }`}
                 onClick={() => handleWedgeClick(String(index))}
                 aria-label={wedge.label}
@@ -280,6 +338,7 @@ export default function GameBoard() {
           setPlayerSequence([])
           setBotSequence([])
           setIsModalOpen(false)
+          setPlayerInitials('')
         }}
         style={modalStyles}
       >
@@ -293,6 +352,7 @@ export default function GameBoard() {
                 setPlayerSequence([])
                 setBotSequence([])
                 setIsModalOpen(false)
+                setPlayerInitials('')
               }}
               className="text-2xl hover:scale-105"
             >
@@ -303,7 +363,7 @@ export default function GameBoard() {
             Game over!
           </h3>
           <h4 className="text-center text-3xl my-4">Score: {playerScore}</h4>
-          {!shouldPostNewRecord && !shouldReplaceRecord && (
+          {!shouldPostNewRecord && (
             <div className="text-center my-2">
               <button
                 onClick={() => {
@@ -312,15 +372,41 @@ export default function GameBoard() {
                   setPlayerSequence([])
                   setBotSequence([])
                   setIsModalOpen(false)
+                  setPlayerInitials('')
                 }}
-                className="Link"
+                className="Button"
               >
                 Play again?
               </button>
             </div>
           )}
-          {shouldPostNewRecord && <div></div>}
-          {shouldReplaceRecord && <div></div>}
+          {shouldPostNewRecord && (
+            <form
+              onSubmit={(e) => handleSubmitScore(e)}
+              className="flex flex-col items-center gap-2"
+            >
+              <label htmlFor="initials">Enter player initials:</label>
+              <input
+                autoComplete="off"
+                data-1p-ignore
+                data-lp-ignore
+                type="text"
+                id="initials"
+                minLength={2}
+                maxLength={3}
+                value={playerInitials}
+                onChange={(e) => handleInputChange(e)}
+                className="border border-stone-400 text-2xl w-1/3 p-1 text-center font-bold"
+              />
+              <button
+                type="submit"
+                className="Button"
+                disabled={playerInitials.length < 2}
+              >
+                Submit score
+              </button>
+            </form>
+          )}
         </div>
       </Modal>
     </>

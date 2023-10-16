@@ -41,7 +41,7 @@ const Leaderboard = () => {
             return {
               label: tab.label,
               content: (
-                <ol className="list-decimal max-w-max mx-auto pt-4">
+                <ol className="list-decimal max-w-max mx-auto pt-4 min-h-[330px]">
                   {tab.content
                     .sort((a, b) => b.score - a.score)
                     .slice(0, 10)

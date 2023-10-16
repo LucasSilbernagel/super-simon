@@ -13,7 +13,7 @@ export default async function addToCollection(
 
   try {
     const docRef = await addDoc(collectionRef, newItem)
-    console.log('Document written with ID: ', docRef.id)
+    return { docRef }
   } catch (e) {
     error = e
   }

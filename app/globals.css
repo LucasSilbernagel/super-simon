@@ -9,3 +9,7 @@ body {
 .Link {
   @apply underline underline-offset-2 hover:underline-offset-4 focus-visible:underline-offset-4 transition-all;
 }
+
+.Button {
+  @apply bg-blue-900 text-white p-2 uppercase font-bold rounded-md drop-shadow-2xl hover:scale-105 focus-visible:scale-105 transition-all duration-300 active:drop-shadow-sm disabled:bg-gray-500 disabled:scale-100;
+}
