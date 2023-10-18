@@ -218,10 +218,7 @@ export default function GameBoard() {
   useEffect(() => {
     if (categoryScores.length > 10) {
       const sortedScores = categoryScores.sort((a, b) => b.score - a.score)
-      const lowestScores = sortedScores.slice(
-        11,
-        sortedScores.indexOf(sortedScores[sortedScores.length - 1])
-      )
+      const lowestScores = sortedScores.slice(10, sortedScores.length)
       lowestScores.forEach((score) => {
         removeFromCollection(
           selectedDifficulty.value.toLowerCase().replace(' ', '-'),
