@@ -1,5 +1,6 @@
 'use client'
 
+import { orbitron } from '@/app/fonts'
 import { usePathname } from 'next/navigation'
 
 const Header = () => {
@@ -9,7 +10,9 @@ const Header = () => {
     if (pathname === '/') {
       return (
         <>
-          <h1 className="text-6xl mb-4">Super Simon</h1>
+          <h1 className={`text-6xl mb-4 ${orbitron.className} tracking-wide`}>
+            Super Simon
+          </h1>
           <h2 className="text-2xl leading-relaxed">
             The classic memory game Simon, with a twist! <br /> How long of a
             sequence can you remember?
@@ -17,10 +20,16 @@ const Header = () => {
         </>
       )
     } else if (pathname === '/leaderboard') {
-      return <h1 className="text-6xl mb-4">Leaderboard</h1>
+      return (
+        <h1 className={`text-6xl mb-4 ${orbitron.className} tracking-wide`}>
+          Leaderboard
+        </h1>
+      )
     } else
       return (
-        <h1 className="text-5xl text-center py-24">
+        <h1
+          className={`text-5xl text-center py-24 ${orbitron.className} tracking-wide`}
+        >
           Sorry, that page couldn&apos;t be found!
         </h1>
       )

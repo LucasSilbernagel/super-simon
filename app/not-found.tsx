@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import CommonWrapper from './components/CommonWrapper'
 import { FaArrowLeft } from 'react-icons/fa'
+import { Metadata } from 'next'
 
 export default function NotFound() {
   return (
@@ -14,4 +15,9 @@ export default function NotFound() {
       </div>
     </CommonWrapper>
   )
+}
+
+export const metadata: Metadata = {
+  title: 'Super Simon | 404',
+  description: 'The classic memory game Simon, with a twist!',
 }

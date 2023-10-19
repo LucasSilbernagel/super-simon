@@ -4,6 +4,7 @@ import { updateGameStatus } from '@/app/redux/features/gameStatusSlice'
 import { updateDifficulty } from '@/app/redux/features/difficultySlice'
 import { useAppDispatch, useAppSelector } from '../../redux/hooks'
 import './Difficulty.css'
+import { orbitron } from '@/app/fonts'
 
 export type Difficulty = 'EASY' | 'NORMAL' | 'HARD' | 'SUPER SIMON'
 
@@ -41,7 +42,7 @@ export default function Difficulty() {
                 }}
                 className={`Difficulty__button ${getButtonColour(
                   difficulty as Difficulty
-                )}`}
+                )} ${orbitron.className}`}
               >
                 {difficulty}
               </button>

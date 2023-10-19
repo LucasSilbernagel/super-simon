@@ -13,6 +13,7 @@ import getCollection from '@/app/firebase/getData'
 import removeFromCollection from '@/app/firebase/removeData'
 import addToCollection from '@/app/firebase/addData'
 import { useRouter } from 'next/navigation'
+import { orbitron } from '@/app/fonts'
 
 export default function GameBoard() {
   const { push } = useRouter()
@@ -356,7 +357,9 @@ export default function GameBoard() {
               <FaTimes />
             </button>
           </div>
-          <h3 className="text-4xl uppercase font-bold mt-6 text-center">
+          <h3
+            className={`text-4xl uppercase font-bold mt-6 text-center ${orbitron.className}`}
+          >
             Game over!
           </h3>
           <h4 className="text-center text-3xl my-4">Score: {playerScore}</h4>
@@ -371,7 +374,7 @@ export default function GameBoard() {
                   setIsModalOpen(false)
                   setPlayerInitials('')
                 }}
-                className="Button"
+                className={`Button ${orbitron.className} tracking-widest`}
               >
                 Play again?
               </button>
@@ -397,7 +400,7 @@ export default function GameBoard() {
               />
               <button
                 type="submit"
-                className="Button"
+                className={`Button ${orbitron.className} tracking-widest`}
                 disabled={playerInitials.length < 2}
               >
                 Submit score
