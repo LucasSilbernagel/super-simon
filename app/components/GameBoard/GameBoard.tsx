@@ -203,7 +203,6 @@ export default function GameBoard() {
         console.error(error)
       }
     }
-
     fetchCollectionData()
   }, [playerScore, selectedDifficulty.value])
 

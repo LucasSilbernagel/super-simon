@@ -10,7 +10,9 @@ const Header = () => {
     if (pathname === '/') {
       return (
         <>
-          <h1 className={`text-6xl mb-4 ${orbitron.className} tracking-wide`}>
+          <h1
+            className={`text-4xl sm:text-6xl mb-4 ${orbitron.className} tracking-wide`}
+          >
             Super Simon
           </h1>
           <h2 className="text-2xl leading-relaxed">
@@ -21,14 +23,16 @@ const Header = () => {
       )
     } else if (pathname === '/leaderboard') {
       return (
-        <h1 className={`text-6xl mb-4 ${orbitron.className} tracking-wide`}>
+        <h1
+          className={`text-4xl sm:text-6xl mb-4 ${orbitron.className} tracking-wide`}
+        >
           Leaderboard
         </h1>
       )
     } else
       return (
         <h1
-          className={`text-5xl text-center py-24 ${orbitron.className} tracking-wide`}
+          className={`text-4xl sm:text-6xl text-center py-24 ${orbitron.className} tracking-wide`}
         >
           Sorry, that page couldn&apos;t be found!
         </h1>
