@@ -7,7 +7,7 @@
 }
 
 .GameBoard__wedge {
-  @apply w-1/2 h-1/2 absolute transition-opacity z-30;
+  @apply w-1/2 h-1/2 absolute transition-opacity z-0;
 }
 
 .GameBoard__start-button {
