@@ -400,6 +400,7 @@ export default function GameBoard() {
               >
                 <label htmlFor="initials">Enter player initials:</label>
                 <input
+                  autoFocus
                   autoComplete="off"
                   data-1p-ignore
                   data-lp-ignore
