@@ -139,18 +139,21 @@ export default function GameBoard() {
   }, [gameStatus.value, botSequence])
 
   useEffect(() => {
-    if (gameStatus.value === 'STARTED') {
-      if (botSequence.length > playerScore) {
-        setIsPlayingBotSequence(true)
-        setTimeout(() => {
-          playBotSequence()
-            .then(() => setIsPlayingBotSequence(false))
-            .catch((error) => {
-              console.error(error)
-            })
-        }, 500)
+    const playSequence = async () => {
+      try {
+        if (gameStatus.value === 'STARTED') {
+          if (botSequence.length > playerScore) {
+            setIsPlayingBotSequence(true)
+            await new Promise((res) => setTimeout(res, 500))
+            await playBotSequence()
+            setIsPlayingBotSequence(false)
+          }
+        }
+      } catch (error) {
+        console.error(error)
       }
     }
+    playSequence()
   }, [gameStatus.value, botSequence, playerScore])
 
   useEffect(() => {
@@ -217,42 +220,46 @@ export default function GameBoard() {
   }, [categoryScores, playerScore])
 
   useEffect(() => {
-    if (categoryScores.length > 10) {
-      const sortedScores = categoryScores.sort((a, b) => b.score - a.score)
-      const lowestScores = sortedScores.slice(10, sortedScores.length)
-      lowestScores.forEach((score) => {
-        removeFromCollection(
-          selectedDifficulty.value.toLowerCase().replace(' ', '-'),
-          score.id
-        )
-          .then((result) => {
+    const handleScores = async () => {
+      if (categoryScores.length > 10) {
+        const sortedScores = categoryScores.sort((a, b) => b.score - a.score)
+        const lowestScores = sortedScores.slice(10, sortedScores.length)
+        for (const score of lowestScores) {
+          try {
+            const result = await removeFromCollection(
+              selectedDifficulty.value.toLowerCase().replace(' ', '-'),
+              score.id
+            )
             if (result.error) {
               console.error('Error removing the document:', result.error)
             }
-          })
-          .catch((error) => {
+          } catch (error) {
             console.error('An error occurred:', error)
-          })
-      })
+          }
+        }
+      }
     }
+    handleScores()
   }, [categoryScores, selectedDifficulty])
 
   const isSuperSimonMode =
     gameStatus.value === 'STARTED' && selectedDifficulty.value === 'SUPER SIMON'
 
-  const addNewHighScore = (player: string) => {
-    addToCollection(selectedDifficulty.value.toLowerCase().replace(' ', '-'), {
-      player: player,
-      score: playerScore,
-    })
-      .then((result) => {
-        if (result.error) {
-          console.error('Error adding the document:', result.error)
+  const addNewHighScore = async (player: string) => {
+    try {
+      const result = await addToCollection(
+        selectedDifficulty.value.toLowerCase().replace(' ', '-'),
+        {
+          player: player,
+          score: playerScore,
         }
-      })
-      .catch((error) => {
-        console.error('An error occurred:', error)
-      })
+      )
+      if (result.error) {
+        console.error('Error adding the document:', result.error)
+      }
+    } catch (error) {
+      console.error('An error occurred:', error)
+    }
   }
 
   const handleInputChange = (e: { target: { value: string } }) => {
