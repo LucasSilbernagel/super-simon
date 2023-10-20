@@ -52,6 +52,7 @@ export default function GameBoard() {
   >([])
   const [shouldPostNewRecord, setShouldPostNewRecord] = useState(false)
   const [playerInitials, setPlayerInitials] = useState('')
+  const [hasError, setHasError] = useState(false)
 
   const areWedgesDisabled =
     gameStatus.value === 'UNSTARTED' ||
@@ -200,6 +201,7 @@ export default function GameBoard() {
         )
         setCategoryScores(data.results.sort((a, b) => b.score - a.score))
       } catch (error) {
+        setHasError(true)
         console.error(error)
       }
     }
@@ -230,9 +232,11 @@ export default function GameBoard() {
               score.id
             )
             if (result.error) {
+              setHasError(true)
               console.error('Error removing the document:', result.error)
             }
           } catch (error) {
+            setHasError(true)
             console.error('An error occurred:', error)
           }
         }
@@ -254,9 +258,11 @@ export default function GameBoard() {
         }
       )
       if (result.error) {
+        setHasError(true)
         console.error('Error adding the document:', result.error)
       }
     } catch (error) {
+      setHasError(true)
       console.error('An error occurred:', error)
     }
   }
@@ -283,95 +289,74 @@ export default function GameBoard() {
     }
   }
 
-  return (
-    <>
-      {gameStatus.value !== 'PAGELOAD' && (
-        <div
-          className={`GameBoard ${
-            isSuperSimonMode ? 'GameBoard--rotating' : ''
-          }`}
-        >
-          {wedges.map((wedge, index) => {
-            return (
-              <button
-                key={wedge.style.replaceAll(' ', '-')}
-                id={`${index}`}
-                disabled={areWedgesDisabled}
-                className={`GameBoard__wedge ${wedge.style} ${
-                  lastClickedWedge === String(index) ||
-                  botClick === String(index)
-                    ? 'opacity-100'
-                    : 'opacity-60'
-                }`}
-                onClick={() => handleWedgeClick(String(index))}
-                aria-label={wedge.label}
-              />
-            )
-          })}
-          {gameStatus.value === 'UNSTARTED' && (
-            <button
-              onClick={() => {
-                setPlayerScore(0)
-                setPlayerSequence([])
-                setBotSequence([])
-                setIsModalOpen(false)
-                dispatch(updateGameStatus({ value: 'STARTED' }))
-              }}
-              className="GameBoard__start-button"
-            >
-              Start
-            </button>
-          )}
-          {(gameStatus.value === 'STARTED' ||
-            gameStatus.value === 'FINISHED') && (
-            <div
-              className={`GameBoard__score ${
-                isSuperSimonMode ? 'GameBoard__score--rotating' : ''
-              }`}
-            >
-              <div>{playerScore}</div>
-            </div>
-          )}
-        </div>
-      )}
-      <Modal
-        isOpen={isModalOpen}
-        onRequestClose={() => {
-          dispatch(updateGameStatus({ value: 'PAGELOAD' }))
-          setPlayerScore(0)
-          setPlayerSequence([])
-          setBotSequence([])
-          setIsModalOpen(false)
-          setPlayerInitials('')
-        }}
-        style={modalStyles}
-      >
-        <div>
-          <div className="w-full flex justify-end">
-            <button
-              aria-label="Close modal"
-              onClick={() => {
-                dispatch(updateGameStatus({ value: 'PAGELOAD' }))
-                setPlayerScore(0)
-                setPlayerSequence([])
-                setBotSequence([])
-                setIsModalOpen(false)
-                setPlayerInitials('')
-              }}
-              className="text-2xl hover:scale-105"
-            >
-              <FaTimes />
-            </button>
-          </div>
-          <h3
-            className={`text-4xl uppercase font-bold mt-6 text-center ${orbitron.className}`}
+  if (!hasError) {
+    return (
+      <>
+        {gameStatus.value !== 'PAGELOAD' && (
+          <div
+            className={`GameBoard ${
+              isSuperSimonMode ? 'GameBoard--rotating' : ''
+            }`}
           >
-            Game over!
-          </h3>
-          <h4 className="text-center text-3xl my-4">Score: {playerScore}</h4>
-          {!shouldPostNewRecord && (
-            <div className="text-center my-2">
+            {wedges.map((wedge, index) => {
+              return (
+                <button
+                  key={wedge.style.replaceAll(' ', '-')}
+                  id={`${index}`}
+                  disabled={areWedgesDisabled}
+                  className={`GameBoard__wedge ${wedge.style} ${
+                    lastClickedWedge === String(index) ||
+                    botClick === String(index)
+                      ? 'opacity-100'
+                      : 'opacity-60'
+                  }`}
+                  onClick={() => handleWedgeClick(String(index))}
+                  aria-label={wedge.label}
+                />
+              )
+            })}
+            {gameStatus.value === 'UNSTARTED' && (
               <button
+                onClick={() => {
+                  setPlayerScore(0)
+                  setPlayerSequence([])
+                  setBotSequence([])
+                  setIsModalOpen(false)
+                  dispatch(updateGameStatus({ value: 'STARTED' }))
+                }}
+                className="GameBoard__start-button"
+              >
+                Start
+              </button>
+            )}
+            {(gameStatus.value === 'STARTED' ||
+              gameStatus.value === 'FINISHED') && (
+              <div
+                className={`GameBoard__score ${
+                  isSuperSimonMode ? 'GameBoard__score--rotating' : ''
+                }`}
+              >
+                <div>{playerScore}</div>
+              </div>
+            )}
+          </div>
+        )}
+        <Modal
+          isOpen={isModalOpen}
+          onRequestClose={() => {
+            dispatch(updateGameStatus({ value: 'PAGELOAD' }))
+            setPlayerScore(0)
+            setPlayerSequence([])
+            setBotSequence([])
+            setIsModalOpen(false)
+            setPlayerInitials('')
+          }}
+          style={modalStyles}
+        >
+          <div>
+            <div className="w-full flex justify-end">
+              <button
+                aria-label="Close modal"
                 onClick={() => {
                   dispatch(updateGameStatus({ value: 'PAGELOAD' }))
                   setPlayerScore(0)
@@ -380,41 +365,69 @@ export default function GameBoard() {
                   setIsModalOpen(false)
                   setPlayerInitials('')
                 }}
-                className={`Button ${orbitron.className} tracking-widest`}
+                className="text-2xl hover:scale-105"
               >
-                Play again?
+                <FaTimes />
               </button>
             </div>
-          )}
-          {shouldPostNewRecord && (
-            <form
-              onSubmit={(e) => handleSubmitScore(e)}
-              className="flex flex-col items-center gap-2"
+            <h3
+              className={`text-4xl uppercase font-bold mt-6 text-center ${orbitron.className}`}
             >
-              <label htmlFor="initials">Enter player initials:</label>
-              <input
-                autoComplete="off"
-                data-1p-ignore
-                data-lp-ignore
-                type="text"
-                id="initials"
-                minLength={2}
-                maxLength={3}
-                value={playerInitials}
-                onChange={(e) => handleInputChange(e)}
-                className="border border-stone-400 text-2xl w-1/3 p-1 text-center font-bold"
-              />
-              <button
-                type="submit"
-                className={`Button ${orbitron.className} tracking-widest`}
-                disabled={playerInitials.length < 2}
+              Game over!
+            </h3>
+            <h4 className="text-center text-3xl my-4">Score: {playerScore}</h4>
+            {!shouldPostNewRecord && (
+              <div className="text-center my-2">
+                <button
+                  onClick={() => {
+                    dispatch(updateGameStatus({ value: 'PAGELOAD' }))
+                    setPlayerScore(0)
+                    setPlayerSequence([])
+                    setBotSequence([])
+                    setIsModalOpen(false)
+                    setPlayerInitials('')
+                  }}
+                  className={`Button ${orbitron.className} tracking-widest`}
+                >
+                  Play again?
+                </button>
+              </div>
+            )}
+            {shouldPostNewRecord && (
+              <form
+                onSubmit={(e) => handleSubmitScore(e)}
+                className="flex flex-col items-center gap-2"
               >
-                Submit score
-              </button>
-            </form>
-          )}
-        </div>
-      </Modal>
-    </>
-  )
+                <label htmlFor="initials">Enter player initials:</label>
+                <input
+                  autoComplete="off"
+                  data-1p-ignore
+                  data-lp-ignore
+                  type="text"
+                  id="initials"
+                  minLength={2}
+                  maxLength={3}
+                  value={playerInitials}
+                  onChange={(e) => handleInputChange(e)}
+                  className="border border-stone-400 text-2xl w-1/3 p-1 text-center font-bold"
+                />
+                <button
+                  type="submit"
+                  className={`Button ${orbitron.className} tracking-widest`}
+                  disabled={playerInitials.length < 2}
+                >
+                  Submit score
+                </button>
+              </form>
+            )}
+          </div>
+        </Modal>
+      </>
+    )
+  } else
+    return (
+      <div className="mx-auto max-w-max flex justify-center items-center h-[200px] my-[173.5px] text-xl bg-white text-red-800 font-bold px-8">
+        <p>There was an issue loading the game, please try again later!</p>
+      </div>
+    )
 }

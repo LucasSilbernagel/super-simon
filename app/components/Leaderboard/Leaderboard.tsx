@@ -14,6 +14,7 @@ const Leaderboard = () => {
   const [allCollectionData, setAllCollectionData] =
     useState<ILeaderboardCollection>()
   const [isLoading, setIsLoading] = useState(true)
+  const [hasError, setHasError] = useState(false)
 
   const difficulties = ['easy', 'normal', 'hard', 'super-simon']
 
@@ -27,6 +28,7 @@ const Leaderboard = () => {
             const { results } = await getCollection(difficulty)
             allCollections[difficulty] = results
           } catch (error) {
+            setHasError(true)
             console.error(`Error fetching data for ${difficulty}: ${error}`)
           }
         })
@@ -37,7 +39,7 @@ const Leaderboard = () => {
     fetchAllCollections()
   }, [])
 
-  if (allCollectionData && !isLoading) {
+  if (allCollectionData && !isLoading && !hasError) {
     return (
       <div className="max-w-max mx-auto bg-white text-black my-12 p-8 rounded-md">
         <Tabs
