@@ -307,8 +307,8 @@ export default function GameBoard() {
                   className={`GameBoard__wedge ${wedge.style} ${
                     lastClickedWedge === String(index) ||
                     botClick === String(index)
-                      ? 'opacity-100'
-                      : 'opacity-60'
+                      ? 'opacity-100 z-0'
+                      : 'opacity-60 z-0'
                   }`}
                   onClick={() => handleWedgeClick(String(index))}
                   aria-label={wedge.label}
