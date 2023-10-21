@@ -24,7 +24,7 @@ const Header = () => {
     } else if (pathname === '/leaderboard') {
       return (
         <h1
-          className={`text-4xl sm:text-6xl mb-4 ${orbitron.className} tracking-wide`}
+          className={`text-4xl sm:text-6xl my-4 ${orbitron.className} tracking-wide`}
         >
           Leaderboard
         </h1>
