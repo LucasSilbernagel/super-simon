@@ -9,11 +9,11 @@
 }
 
 .Tabs__button {
-  @apply transition-all p-4 relative uppercase font-bold;
+  @apply transition-all duration-300 p-4 relative uppercase font-bold;
 }
 
 .Tabs__button:after {
-  @apply absolute h-[4px] bottom-[-1px] w-full left-0 right-0 transition-colors;
+  @apply absolute h-[5px] bottom-[-1px] w-full left-0 right-0 transition-all duration-300;
   content: '';
 }
 
