@@ -22,13 +22,18 @@ export default function Home() {
 }
 
 export const metadata = {
+  metadataBase: new URL('https://super-simon-kappa.vercel.app'),
   title: 'Super Simon',
   description: 'The classic memory game Simon, with a twist!',
   url: 'https://super-simon-kappa.vercel.app/',
   siteName: 'Super Simon',
-  openGraph: {
-    images: 'seoImage.png',
-  },
   locale: 'en_US',
   type: 'website',
+  openGraph: {
+    images: [
+      {
+        url: 'seoImage.png',
+      },
+    ],
+  },
 }
