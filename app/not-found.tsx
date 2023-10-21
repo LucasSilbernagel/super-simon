@@ -1,7 +1,6 @@
 import Link from 'next/link'
 import CommonWrapper from './components/CommonWrapper'
 import { FaArrowLeft } from 'react-icons/fa'
-import { Metadata } from 'next'
 
 export default function NotFound() {
   return (
@@ -17,7 +16,14 @@ export default function NotFound() {
   )
 }
 
-export const metadata: Metadata = {
+export const metadata = {
   title: 'Super Simon | 404',
   description: 'The classic memory game Simon, with a twist!',
+  url: 'https://super-simon-nmae08fvy-lucassilbernagel.vercel.app/',
+  siteName: 'Super Simon',
+  openGraph: {
+    images: 'seoImage.png',
+  },
+  locale: 'en_US',
+  type: 'website',
 }

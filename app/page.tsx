@@ -3,7 +3,6 @@ import CommonWrapper from './components/CommonWrapper'
 import Difficulty from './components/Difficulty/Difficulty'
 import GameBoard from './components/GameBoard/GameBoard'
 import { orbitron } from './fonts'
-import { Metadata } from 'next'
 import { FaArrowRight } from 'react-icons/fa'
 
 export default function Home() {
@@ -22,7 +21,14 @@ export default function Home() {
   )
 }
 
-export const metadata: Metadata = {
+export const metadata = {
   title: 'Super Simon',
   description: 'The classic memory game Simon, with a twist!',
+  url: 'https://super-simon-nmae08fvy-lucassilbernagel.vercel.app/',
+  siteName: 'Super Simon',
+  openGraph: {
+    images: 'seoImage.png',
+  },
+  locale: 'en_US',
+  type: 'website',
 }

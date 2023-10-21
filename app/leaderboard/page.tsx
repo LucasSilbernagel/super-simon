@@ -3,7 +3,6 @@ import CommonWrapper from '../components/CommonWrapper'
 import Leaderboard from '../components/Leaderboard/Leaderboard'
 import { FaArrowLeft } from 'react-icons/fa'
 import { orbitron } from '../fonts'
-import { Metadata } from 'next'
 
 export default function NotFound() {
   return (
@@ -23,7 +22,14 @@ export default function NotFound() {
   )
 }
 
-export const metadata: Metadata = {
+export const metadata = {
   title: 'Super Simon | Leaderboard',
   description: 'The classic memory game Simon, with a twist!',
+  url: 'https://super-simon-nmae08fvy-lucassilbernagel.vercel.app/',
+  siteName: 'Super Simon',
+  openGraph: {
+    images: 'seoImage.png',
+  },
+  locale: 'en_US',
+  type: 'website',
 }
