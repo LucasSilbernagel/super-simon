@@ -25,7 +25,7 @@ export default function NotFound() {
 export const metadata = {
   title: 'Super Simon | Leaderboard',
   description: 'The classic memory game Simon, with a twist!',
-  url: 'https://super-simon-nmae08fvy-lucassilbernagel.vercel.app/',
+  url: 'https://super-simon-kappa.vercel.app/',
   siteName: 'Super Simon',
   openGraph: {
     images: 'seoImage.png',
