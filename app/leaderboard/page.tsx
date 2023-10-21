@@ -34,9 +34,6 @@ export const metadata = {
   title: 'Super Simon | Leaderboard',
   description: 'The classic memory game Simon, with a twist!',
   url: 'https://super-simon-kappa.vercel.app/',
-  siteName: 'Super Simon',
-  locale: 'en_US',
-  type: 'website',
   openGraph: {
     images: [
       {

@@ -3,36 +3,19 @@
 import { updateGameStatus } from '@/app/redux/features/gameStatusSlice'
 import { useAppDispatch, useAppSelector } from '../../redux/hooks'
 import './GameBoard.css'
-import { FormEvent, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import * as Tone from 'tone'
 import { getRandomInteger } from '@/app/utils/getRandomInteger'
 import { Difficulty } from '../Difficulty/Difficulty'
-import Modal from 'react-modal'
-import { FaTimes } from 'react-icons/fa'
 import getCollection from '@/app/firebase/getData'
 import removeFromCollection from '@/app/firebase/removeData'
-import addToCollection from '@/app/firebase/addData'
-import { useRouter } from 'next/navigation'
-import { orbitron } from '@/app/fonts'
+import EndgameModal from '../EndgameModal/EndgameModal'
 
 export default function GameBoard() {
-  const { push } = useRouter()
   const gameStatus = useAppSelector((state) => state.gameStatusReducer)
   const selectedDifficulty = useAppSelector((state) => state.difficultyReducer)
 
   const dispatch = useAppDispatch()
-
-  const modalStyles = {
-    overlay: {
-      backgroundColor: 'rgba(0, 0, 0, 0.3)',
-    },
-    content: {
-      top: '40%',
-      left: '50%',
-      right: 'auto',
-      bottom: 'auto',
-    },
-  }
 
   // create a synth and connect it to the main output (speakers)
   let synth: Tone.Synth<Tone.SynthOptions>
@@ -50,8 +33,6 @@ export default function GameBoard() {
   const [categoryScores, setCategoryScores] = useState<
     { id: string; player: string; score: number }[]
   >([])
-  const [shouldPostNewRecord, setShouldPostNewRecord] = useState(false)
-  const [playerInitials, setPlayerInitials] = useState('')
   const [hasError, setHasError] = useState(false)
 
   const areWedgesDisabled =
@@ -77,7 +58,6 @@ export default function GameBoard() {
   }
 
   useEffect(() => {
-    Modal.setAppElement('body')
     dispatch(updateGameStatus({ value: 'PAGELOAD' }))
   }, [])
 
@@ -209,18 +189,6 @@ export default function GameBoard() {
   }, [playerScore, selectedDifficulty.value])
 
   useEffect(() => {
-    if (
-      (categoryScores.length < 10 && playerScore > 0) ||
-      (categoryScores.length >= 10 &&
-        categoryScores.some((score) => score.score < playerScore))
-    ) {
-      setShouldPostNewRecord(true)
-    } else {
-      setShouldPostNewRecord(false)
-    }
-  }, [categoryScores, playerScore])
-
-  useEffect(() => {
     const handleScores = async () => {
       if (categoryScores.length > 10) {
         const sortedScores = categoryScores.sort((a, b) => b.score - a.score)
@@ -247,47 +215,6 @@ export default function GameBoard() {
 
   const isSuperSimonMode =
     gameStatus.value === 'STARTED' && selectedDifficulty.value === 'SUPER SIMON'
-
-  const addNewHighScore = async (player: string) => {
-    try {
-      const result = await addToCollection(
-        selectedDifficulty.value.toLowerCase().replace(' ', '-'),
-        {
-          player: player,
-          score: playerScore,
-        }
-      )
-      if (result.error) {
-        setHasError(true)
-        console.error('Error adding the document:', result.error)
-      }
-    } catch (error) {
-      setHasError(true)
-      console.error('An error occurred:', error)
-    }
-  }
-
-  const handleInputChange = (e: { target: { value: string } }) => {
-    const inputText = e.target.value
-    const onlyLetters = inputText.replace(/[^A-Za-z]/g, '')
-    setPlayerInitials(onlyLetters)
-  }
-
-  const handleSubmitScore = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    if (playerInitials.length > 1) {
-      addNewHighScore(playerInitials)
-      setTimeout(() => {
-        setPlayerScore(0)
-        setPlayerSequence([])
-        setBotSequence([])
-        setIsModalOpen(false)
-        setPlayerInitials('')
-        push('/leaderboard')
-        dispatch(updateGameStatus({ value: 'PAGELOAD' }))
-      }, 100)
-    }
-  }
 
   if (!hasError) {
     return (
@@ -341,88 +268,16 @@ export default function GameBoard() {
             )}
           </div>
         )}
-        <Modal
-          isOpen={isModalOpen}
-          onRequestClose={() => {
-            dispatch(updateGameStatus({ value: 'PAGELOAD' }))
-            setPlayerScore(0)
-            setPlayerSequence([])
-            setBotSequence([])
-            setIsModalOpen(false)
-            setPlayerInitials('')
-          }}
-          style={modalStyles}
-        >
-          <div>
-            <div className="w-full flex justify-end">
-              <button
-                aria-label="Close modal"
-                onClick={() => {
-                  dispatch(updateGameStatus({ value: 'PAGELOAD' }))
-                  setPlayerScore(0)
-                  setPlayerSequence([])
-                  setBotSequence([])
-                  setIsModalOpen(false)
-                  setPlayerInitials('')
-                }}
-                className="text-2xl hover:scale-105"
-              >
-                <FaTimes />
-              </button>
-            </div>
-            <h3
-              className={`text-4xl uppercase font-bold mt-6 text-center ${orbitron.className}`}
-            >
-              Game over!
-            </h3>
-            <h4 className="text-center text-3xl my-4">Score: {playerScore}</h4>
-            {!shouldPostNewRecord && (
-              <div className="text-center my-2">
-                <button
-                  onClick={() => {
-                    dispatch(updateGameStatus({ value: 'PAGELOAD' }))
-                    setPlayerScore(0)
-                    setPlayerSequence([])
-                    setBotSequence([])
-                    setIsModalOpen(false)
-                    setPlayerInitials('')
-                  }}
-                  className={`Button ${orbitron.className} tracking-widest`}
-                >
-                  Play again?
-                </button>
-              </div>
-            )}
-            {shouldPostNewRecord && (
-              <form
-                onSubmit={(e) => handleSubmitScore(e)}
-                className="flex flex-col items-center gap-2"
-              >
-                <label htmlFor="initials">Enter player initials:</label>
-                <input
-                  autoFocus
-                  autoComplete="off"
-                  data-1p-ignore
-                  data-lp-ignore
-                  type="text"
-                  id="initials"
-                  minLength={2}
-                  maxLength={3}
-                  value={playerInitials}
-                  onChange={(e) => handleInputChange(e)}
-                  className="border border-stone-400 text-2xl w-1/3 p-1 text-center font-bold"
-                />
-                <button
-                  type="submit"
-                  className={`Button ${orbitron.className} tracking-widest mt-2`}
-                  disabled={playerInitials.length < 2}
-                >
-                  Submit score
-                </button>
-              </form>
-            )}
-          </div>
-        </Modal>
+        <EndgameModal
+          isModalOpen={isModalOpen}
+          setIsModalOpen={setIsModalOpen}
+          setBotSequence={setBotSequence}
+          setHasError={setHasError}
+          setPlayerSequence={setPlayerSequence}
+          categoryScores={categoryScores}
+          playerScore={playerScore}
+          setPlayerScore={setPlayerScore}
+        />
       </>
     )
   } else

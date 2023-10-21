@@ -1,3 +1,4 @@
+/** Returns a random number from 1 to 4 */
 export const getRandomInteger = () => {
   if (typeof window !== 'undefined' && window.crypto) {
     const randomArray = new Uint32Array(1)

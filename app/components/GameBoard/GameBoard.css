@@ -20,7 +20,7 @@
 }
 
 .GameBoard__score--rotating {
-  animation: antiRotate 12s linear infinite;
+  animation: counterRotate 12s linear infinite;
 }
 
 @keyframes rotate {
@@ -32,38 +32,11 @@
   }
 }
 
-@keyframes antiRotate {
+@keyframes counterRotate {
   from {
     transform: translate(-50%, -50%) rotate(0deg);
   }
   to {
     transform: translate(-50%, -50%) rotate(-360deg);
   }
-}
-
-.ReactModal__Overlay {
-  opacity: 0;
-  transition: opacity 300ms ease-in-out;
-}
-
-.ReactModal__Overlay--after-open {
-  opacity: 1;
-}
-
-.ReactModal__Overlay--before-close {
-  opacity: 0;
-}
-
-.ReactModal__Content {
-  @apply text-black min-w-[290px];
-  transform: translate(-50%, -1000px);
-  transition: transform 300ms ease-in-out;
-}
-
-.ReactModal__Content--after-open {
-  transform: translate(-50%, -50%);
-}
-
-.ReactModal__Content--before-close {
-  transform: translateY(-1000px);
 }
