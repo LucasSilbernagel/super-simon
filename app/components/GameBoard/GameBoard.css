@@ -8,6 +8,7 @@
 
 .GameBoard__wedge {
   @apply w-1/2 h-1/2 absolute transition-opacity;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .GameBoard__start-button {
