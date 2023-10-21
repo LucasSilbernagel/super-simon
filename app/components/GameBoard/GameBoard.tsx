@@ -414,7 +414,7 @@ export default function GameBoard() {
                 />
                 <button
                   type="submit"
-                  className={`Button ${orbitron.className} tracking-widest`}
+                  className={`Button ${orbitron.className} tracking-widest mt-2`}
                   disabled={playerInitials.length < 2}
                 >
                   Submit score

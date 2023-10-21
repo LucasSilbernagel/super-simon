@@ -6,10 +6,32 @@ body {
   @apply text-white bg-gray-800;
 }
 
+.Button {
+  @apply bg-blue-900 text-white p-2 uppercase font-bold rounded-md drop-shadow-2xl hover:scale-105 focus-visible:scale-105 transition-all duration-300 active:drop-shadow-sm disabled:bg-gray-500 disabled:scale-100;
+}
+
 .Link {
   @apply underline underline-offset-2 hover:underline-offset-4 focus-visible:underline-offset-4 transition-all;
 }
 
-.Button {
-  @apply bg-blue-900 text-white p-2 uppercase font-bold rounded-md drop-shadow-2xl hover:scale-105 focus-visible:scale-105 transition-all duration-300 active:drop-shadow-sm disabled:bg-gray-500 disabled:scale-100;
+.ArrowLink {
+  @apply flex items-center;
+}
+
+.ArrowLink .ArrowLeft {
+  @apply -translate-x-2 transition-all duration-300;
+}
+
+.ArrowLink:hover .ArrowLeft,
+.ArrowLink:focus-visible .ArrowLeft {
+  @apply -translate-x-3;
+}
+
+.ArrowLink .ArrowRight {
+  @apply translate-x-2 transition-all duration-300;
+}
+
+.ArrowLink:hover .ArrowRight,
+.ArrowLink:focus-visible .ArrowRight {
+  @apply translate-x-3;
 }

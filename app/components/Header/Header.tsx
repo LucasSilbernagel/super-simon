@@ -11,11 +11,11 @@ const Header = () => {
       return (
         <>
           <h1
-            className={`text-4xl sm:text-6xl mb-4 ${orbitron.className} tracking-wide`}
+            className={`text-4xl sm:text-6xl my-4 ${orbitron.className} tracking-wide`}
           >
             Super Simon
           </h1>
-          <h2 className="text-2xl leading-relaxed">
+          <h2 className="text-2xl leading-relaxed mt-8">
             The classic memory game Simon, with a twist! <br /> How long of a
             sequence can you remember?
           </h2>

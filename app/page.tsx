@@ -4,6 +4,7 @@ import Difficulty from './components/Difficulty/Difficulty'
 import GameBoard from './components/GameBoard/GameBoard'
 import { orbitron } from './fonts'
 import { Metadata } from 'next'
+import { FaArrowRight } from 'react-icons/fa'
 
 export default function Home() {
   return (
@@ -11,9 +12,11 @@ export default function Home() {
       <Difficulty />
       <GameBoard />
       <div
-        className={`absolute top-2 right-2 sm:top-4 sm:right-8 sm:text-lg Link ${orbitron.className} tracking-widest`}
+        className={`absolute top-4 right-4 sm:top-4 sm:right-8 sm:text-lg ${orbitron.className} tracking-widest`}
       >
-        <Link href="/leaderboard">Leaderboard</Link>
+        <Link href="/leaderboard" className="ArrowLink">
+          <span>Leaderboard</span> <FaArrowRight className="ArrowRight" />
+        </Link>
       </div>
     </CommonWrapper>
   )

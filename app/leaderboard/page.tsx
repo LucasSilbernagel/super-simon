@@ -8,10 +8,12 @@ import { Metadata } from 'next'
 export default function NotFound() {
   return (
     <CommonWrapper>
-      <Leaderboard />
+      <div className="px-1">
+        <Leaderboard />
+      </div>
       <div className="w-full flex justify-center text-2xl pb-24">
-        <Link href="/" className="text-xl flex Link">
-          <FaArrowLeft />{' '}
+        <Link href="/" className="ArrowLink text-xl">
+          <FaArrowLeft className="ArrowLeft" />{' '}
           <span className={`mx-2 ${orbitron.className} tracking-widest`}>
             Play again
           </span>{' '}

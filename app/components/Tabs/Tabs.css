@@ -37,7 +37,7 @@
 }
 
 .Tabs__dropdown-button {
-  @apply px-3 py-2 w-full text-left;
+  @apply px-3 py-2 w-full text-left uppercase font-bold;
 }
 
 .Tabs__dropdown-button--active, .Tabs__dropdown-button:hover, .Tabs__dropdown-button:focus {

@@ -8,8 +8,8 @@ export default function NotFound() {
     <CommonWrapper>
       <div className="mb-36">
         <div className="w-full flex justify-center text-2xl pb-24">
-          <Link href="/" className="text-xl flex Link">
-            <FaArrowLeft /> <span className="mx-2">Return home</span>{' '}
+          <Link href="/" className="ArrowLink text-xl">
+            <FaArrowLeft className="ArrowLeft" /> <span>Return home</span>{' '}
           </Link>
         </div>
       </div>
