@@ -22,8 +22,6 @@ const Leaderboard = () => {
 
   const difficulties = ['easy', 'normal', 'hard', 'super-simon']
 
-  console.log(selectedDifficulty)
-
   useEffect(() => {
     const allCollections: ILeaderboardCollection = {}
     const fetchAllCollections = async () => {
