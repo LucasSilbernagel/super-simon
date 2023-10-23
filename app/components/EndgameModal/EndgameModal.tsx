@@ -102,7 +102,7 @@ export default function EndgameModal(props: IEndgameModalProps) {
 
   const handleSubmitScore = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    if (playerInitials.length > 1) {
+    if (playerInitials.length > 1 && playerInitials.length < 4) {
       addNewHighScore(playerInitials)
       setTimeout(() => {
         setPlayerScore(0)

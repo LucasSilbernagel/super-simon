@@ -10,23 +10,17 @@ export interface ITabProps {
   /** Text within the tab button */
   label: string | JSX.Element
   /** Content of the tab */
-  content: JSX.Element | string
+  content: string | JSX.Element
 }
 
 export interface ITabArrayProps extends React.HTMLAttributes<HTMLDivElement> {
-  /** Array of Tab Items */
+  /** Array of tab items */
   tabs: ITabProps[]
-  /** Mobile dropdown is shown at tab count */
-  mobileTabCount?: number
-  /** Specify Default Tab */
+  /** Specify default tab */
   defaultTab?: number
 }
 
-const Tabs = ({
-  tabs,
-  mobileTabCount = MOBILE_TAB_COUNT,
-  defaultTab = 0,
-}: ITabArrayProps) => {
+const Tabs = ({ tabs, defaultTab = 0 }: ITabArrayProps) => {
   const [activeTab, setActiveTab] = useState<number>(defaultTab)
   const [showMobileDropdown, toggleShowMobileDropdown] =
     useState<boolean>(false)
@@ -55,13 +49,13 @@ const Tabs = ({
     <>
       <div className="TabsWrapper">
         <nav aria-label="secondary" className="Tabs" data-testid="tabs">
-          {/* Mobile View */}
+          {/* Mobile view */}
           <div
             className="m-0 flex md:hidden"
             data-testid="mobile-tabs"
             role="tablist"
           >
-            {tabs.slice(0, mobileTabCount).map((tab, index) => {
+            {tabs.slice(0, MOBILE_TAB_COUNT).map((tab, index) => {
               return (
                 <button
                   key={`tab-${tab.label}-${index}`}
@@ -81,7 +75,7 @@ const Tabs = ({
                 </button>
               )
             })}
-            {tabs.length > mobileTabCount && (
+            {tabs.length > MOBILE_TAB_COUNT && (
               <div className="flex relative">
                 <button
                   role="tab"
@@ -96,7 +90,7 @@ const Tabs = ({
                 </button>
                 {showMobileDropdown && (
                   <ul className="Tabs__dropdown-menu" ref={ref}>
-                    {tabs.slice(mobileTabCount).map((tab, index) => (
+                    {tabs.slice(MOBILE_TAB_COUNT).map((tab, index) => (
                       <li
                         key={`mobile-dropdown-tab-${index}`}
                         className="list-none"
@@ -104,18 +98,18 @@ const Tabs = ({
                       >
                         <button
                           className={`Tabs__dropdown-button ${
-                            activeTab === index + mobileTabCount
+                            activeTab === index + MOBILE_TAB_COUNT
                               ? 'Tabs__dropdown-button--active'
                               : ''
                           }`}
                           data-testid="tab-mobile-dropdown-button"
                           onClick={() => {
-                            setActiveTab(index + mobileTabCount)
+                            setActiveTab(index + MOBILE_TAB_COUNT)
                             toggleShowMobileDropdown(false)
                           }}
                           tabIndex={0}
                           id={`tab-dropdown-button-${
-                            index + 1 + mobileTabCount
+                            index + 1 + MOBILE_TAB_COUNT
                           }`}
                           type="button"
                         >

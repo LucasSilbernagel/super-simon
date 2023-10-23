@@ -5,7 +5,7 @@ type DifficultyState = {
 }
 
 const initialState = {
-  value: 'NORMAL',
+  value: 'EASY',
 } as DifficultyState
 
 export const difficulty = createSlice({

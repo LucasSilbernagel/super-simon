@@ -10,6 +10,7 @@ import { Difficulty } from '../Difficulty/Difficulty'
 import getCollection from '@/app/firebase/getData'
 import removeFromCollection from '@/app/firebase/removeData'
 import EndgameModal from '../EndgameModal/EndgameModal'
+import ErrorMessage from '../ErrorMessage/ErrorMessage'
 
 export default function GameBoard() {
   const gameStatus = useAppSelector((state) => state.gameStatusReducer)
@@ -111,6 +112,7 @@ export default function GameBoard() {
   }
 
   useEffect(() => {
+    // When the game first starts, add the first move to the bot sequence.
     if (gameStatus.value === 'STARTED') {
       if (botSequence.length === 0) {
         setPlayerSequence([])
@@ -138,32 +140,21 @@ export default function GameBoard() {
   }, [gameStatus.value, botSequence, playerScore])
 
   useEffect(() => {
-    if (gameStatus.value === 'STARTED') {
+    if (gameStatus.value === 'STARTED' && botSequence.length > 0) {
+      // If the player successfully matches the bot sequence, increment the score and add another item to the bot sequence.
       if (
-        botSequence.length > 0 &&
         (botSequence.length === playerScore ||
-          botSequence.length === playerSequence.length)
+          botSequence.length === playerSequence.length) &&
+        botSequence.every((item, index) => playerSequence[index] === item)
       ) {
         setPlayerSequence([])
+        setPlayerScore(playerScore + 1)
         const newBotSequence = [...botSequence]
         newBotSequence.push(String(getRandomInteger()))
         setBotSequence(newBotSequence)
       }
-    }
-  }, [gameStatus.value, botSequence, playerScore, playerSequence])
-
-  useEffect(() => {
-    if (gameStatus.value === 'STARTED') {
+      // End the game if the player fails to match the sequence
       if (
-        botSequence.length > 0 &&
-        botSequence.length === playerSequence.length &&
-        botSequence.every((item, index) => playerSequence[index] === item)
-      ) {
-        setPlayerScore(playerScore + 1)
-        setPlayerSequence([])
-      }
-      if (
-        botSequence.length > 0 &&
         playerSequence.length > 0 &&
         !playerSequence.every((item, index) => botSequence[index] === item)
       ) {
@@ -174,6 +165,7 @@ export default function GameBoard() {
   }, [gameStatus.value, botSequence, playerScore, playerSequence])
 
   useEffect(() => {
+    // Get the leaderboard for the difficulty level being played
     const fetchCollectionData = async () => {
       try {
         const data = await getCollection(
@@ -189,7 +181,8 @@ export default function GameBoard() {
   }, [playerScore, selectedDifficulty.value])
 
   useEffect(() => {
-    const handleScores = async () => {
+    // If a leaderboard category has more than 10 scores, remove the lowest scores so that only 10 remain
+    const onlySaveTenScoresPerCategory = async () => {
       if (categoryScores.length > 10) {
         const sortedScores = categoryScores.sort((a, b) => b.score - a.score)
         const lowestScores = sortedScores.slice(10, sortedScores.length)
@@ -210,7 +203,7 @@ export default function GameBoard() {
         }
       }
     }
-    handleScores()
+    onlySaveTenScoresPerCategory()
   }, [categoryScores, selectedDifficulty])
 
   const isSuperSimonMode =
@@ -282,8 +275,8 @@ export default function GameBoard() {
     )
   } else
     return (
-      <div className="mx-auto max-w-max flex justify-center items-center h-[200px] my-[173.5px] text-xl bg-white text-red-800 font-bold px-8">
-        <p>There was an issue loading the game, please try again later!</p>
-      </div>
+      <ErrorMessage
+        errorText={`There was an issue loading the game, please try again later!`}
+      />
     )
 }

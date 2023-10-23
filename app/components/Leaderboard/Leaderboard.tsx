@@ -5,6 +5,8 @@ import Tabs from '../Tabs/Tabs'
 import { useEffect, useState } from 'react'
 import { getTabsFromFirebase } from '@/app/utils/getTabsFromFirebase'
 import Loader from '../Loader/Loader'
+import ErrorMessage from '../ErrorMessage/ErrorMessage'
+import { useAppSelector } from '@/app/redux/hooks'
 
 export interface ILeaderboardCollection {
   [key: string]: { id: string; player: string; score: number }[]
@@ -16,7 +18,11 @@ const Leaderboard = () => {
   const [isLoading, setIsLoading] = useState(true)
   const [hasError, setHasError] = useState(false)
 
+  const selectedDifficulty = useAppSelector((state) => state.difficultyReducer)
+
   const difficulties = ['easy', 'normal', 'hard', 'super-simon']
+
+  console.log(selectedDifficulty)
 
   useEffect(() => {
     const allCollections: ILeaderboardCollection = {}
@@ -43,6 +49,10 @@ const Leaderboard = () => {
     return (
       <div className="max-w-max mx-auto bg-white text-black my-12 p-8 rounded-md">
         <Tabs
+          defaultTab={difficulties.findIndex(
+            (item) =>
+              item.toUpperCase().replace('-', ' ') === selectedDifficulty.value
+          )}
           tabs={getTabsFromFirebase(allCollectionData).map((tab) => {
             return {
               label: tab.label,
@@ -74,11 +84,9 @@ const Leaderboard = () => {
     )
   } else {
     return (
-      <div className="mx-auto max-w-max flex justify-center items-center h-[200px] my-[173.5px] text-xl bg-white text-red-800 font-bold px-8">
-        <p>
-          There was an issue loading the leaderboard, please try again later!
-        </p>
-      </div>
+      <ErrorMessage
+        errorText={`There was an issue loading the leaderboard, please try again later!`}
+      />
     )
   }
 }
