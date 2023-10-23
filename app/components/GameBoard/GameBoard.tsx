@@ -34,7 +34,7 @@ export default function GameBoard() {
   const [categoryScores, setCategoryScores] = useState<
     { id: string; player: string; score: number }[]
   >([])
-  const [hasError, setHasError] = useState(false)
+  const [gameboardError, setGameboardError] = useState(false)
 
   const areWedgesDisabled =
     gameStatus.value === 'UNSTARTED' ||
@@ -173,7 +173,7 @@ export default function GameBoard() {
         )
         setCategoryScores(data.results.sort((a, b) => b.score - a.score))
       } catch (error) {
-        setHasError(true)
+        setGameboardError(true)
         console.error(error)
       }
     }
@@ -193,11 +193,11 @@ export default function GameBoard() {
               score.id
             )
             if (result.error) {
-              setHasError(true)
+              setGameboardError(true)
               console.error('Error removing the document:', result.error)
             }
           } catch (error) {
-            setHasError(true)
+            setGameboardError(true)
             console.error('An error occurred:', error)
           }
         }
@@ -209,7 +209,7 @@ export default function GameBoard() {
   const isSuperSimonMode =
     gameStatus.value === 'STARTED' && selectedDifficulty.value === 'SUPER SIMON'
 
-  if (!hasError) {
+  if (!gameboardError) {
     return (
       <>
         {gameStatus.value !== 'PAGELOAD' && (
@@ -265,7 +265,7 @@ export default function GameBoard() {
           isModalOpen={isModalOpen}
           setIsModalOpen={setIsModalOpen}
           setBotSequence={setBotSequence}
-          setHasError={setHasError}
+          setGameboardError={setGameboardError}
           setPlayerSequence={setPlayerSequence}
           categoryScores={categoryScores}
           playerScore={playerScore}

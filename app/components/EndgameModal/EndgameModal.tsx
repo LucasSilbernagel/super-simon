@@ -14,7 +14,7 @@ interface IEndgameModalProps {
   isModalOpen: boolean
   setIsModalOpen: Dispatch<SetStateAction<boolean>>
   setBotSequence: Dispatch<SetStateAction<string[]>>
-  setHasError: Dispatch<SetStateAction<boolean>>
+  setGameboardError: Dispatch<SetStateAction<boolean>>
   setPlayerSequence: Dispatch<SetStateAction<string[]>>
   categoryScores: { id: string; player: string; score: number }[]
   playerScore: number
@@ -26,7 +26,7 @@ export default function EndgameModal(props: IEndgameModalProps) {
     isModalOpen,
     setIsModalOpen,
     setBotSequence,
-    setHasError,
+    setGameboardError,
     setPlayerSequence,
     categoryScores,
     playerScore,
@@ -85,11 +85,11 @@ export default function EndgameModal(props: IEndgameModalProps) {
         }
       )
       if (result.error) {
-        setHasError(true)
+        setGameboardError(true)
         console.error('Error adding the document:', result.error)
       }
     } catch (error) {
-      setHasError(true)
+      setGameboardError(true)
       console.error('An error occurred:', error)
     }
   }

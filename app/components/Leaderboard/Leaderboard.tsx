@@ -16,7 +16,7 @@ const Leaderboard = () => {
   const [allCollectionData, setAllCollectionData] =
     useState<ILeaderboardCollection>()
   const [isLoading, setIsLoading] = useState(true)
-  const [hasError, setHasError] = useState(false)
+  const [leaderboardError, setLeaderboardError] = useState(false)
 
   const selectedDifficulty = useAppSelector((state) => state.difficultyReducer)
 
@@ -32,7 +32,7 @@ const Leaderboard = () => {
             const { results } = await getCollection(difficulty)
             allCollections[difficulty] = results
           } catch (error) {
-            setHasError(true)
+            setLeaderboardError(true)
             console.error(`Error fetching data for ${difficulty}: ${error}`)
           }
         })
@@ -43,7 +43,7 @@ const Leaderboard = () => {
     fetchAllCollections()
   }, [])
 
-  if (allCollectionData && !isLoading && !hasError) {
+  if (allCollectionData && !isLoading && !leaderboardError) {
     return (
       <div className="max-w-max mx-auto bg-white text-black my-12 p-8 rounded-md">
         <Tabs
