@@ -19,11 +19,7 @@ export default function GameBoard() {
 
   const dispatch = useAppDispatch()
 
-  // create a synth and connect it to the main output (speakers)
-  let synth: Tone.Synth<Tone.SynthOptions>
-  if (typeof window !== 'undefined') {
-    synth = new Tone.Synth().toDestination()
-  }
+  const synth = new Tone.Synth().toDestination()
 
   const [lastClickedWedge, setLastClickedWedge] = useState<string>('')
   const [botSequence, setBotSequence] = useState<string[]>([])
