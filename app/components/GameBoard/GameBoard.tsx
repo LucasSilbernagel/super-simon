@@ -11,6 +11,7 @@ import getCollection from '@/app/firebase/getData'
 import removeFromCollection from '@/app/firebase/removeData'
 import EndgameModal from '../EndgameModal/EndgameModal'
 import ErrorMessage from '../ErrorMessage/ErrorMessage'
+import { motion } from 'framer-motion'
 
 export default function GameBoard() {
   const gameStatus = useAppSelector((state) => state.gameStatusReducer)
@@ -209,11 +210,20 @@ export default function GameBoard() {
   const isSuperSimonMode =
     gameStatus.value === 'STARTED' && selectedDifficulty.value === 'SUPER SIMON'
 
+  const loadingVariants = {
+    hidden: { opacity: 0 },
+    enter: { opacity: 1 },
+  }
+
   if (!gameboardError) {
     return (
       <>
         {gameStatus.value !== 'PAGELOAD' && (
-          <div
+          <motion.div
+            variants={loadingVariants}
+            initial="hidden"
+            animate="enter"
+            transition={{ duration: 0.8 }}
             className={`GameBoard ${
               isSuperSimonMode ? 'GameBoard--rotating' : ''
             }`}
@@ -259,7 +269,7 @@ export default function GameBoard() {
                 <div>{playerScore}</div>
               </div>
             )}
-          </div>
+          </motion.div>
         )}
         <EndgameModal
           isModalOpen={isModalOpen}

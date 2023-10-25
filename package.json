@@ -12,6 +12,7 @@
   "dependencies": {
     "@reduxjs/toolkit": "^1.9.6",
     "firebase": "^10.4.0",
+    "framer-motion": "^10.16.4",
     "next": "latest",
     "react": "latest",
     "react-dom": "latest",

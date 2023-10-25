@@ -60,7 +60,7 @@ export default function EndgameModal(props: IEndgameModalProps) {
   useEffect(() => {
     if (isModalOpen) {
       document.body.style.overflowY = 'hidden'
-    }
+    } else document.body.style.overflowY = 'visible'
   }, [isModalOpen])
 
   useEffect(() => {

@@ -2,6 +2,7 @@
 
 import { orbitron } from '@/app/fonts'
 import { usePathname } from 'next/navigation'
+import { motion } from 'framer-motion'
 
 const Header = () => {
   const pathname = usePathname()
@@ -9,7 +10,7 @@ const Header = () => {
   const getHeader = () => {
     if (pathname === '/') {
       return (
-        <>
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
           <h1
             className={`text-4xl sm:text-6xl my-4 ${orbitron.className} tracking-wide`}
           >
@@ -19,23 +20,35 @@ const Header = () => {
             The classic memory game Simon, with a twist! <br /> How long of a
             sequence can you remember?
           </h2>
-        </>
+        </motion.div>
       )
     } else if (pathname === '/leaderboard') {
       return (
-        <h1
-          className={`text-4xl sm:text-6xl my-4 ${orbitron.className} tracking-wide`}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 1 }}
         >
-          Leaderboard
-        </h1>
+          <h1
+            className={`text-4xl sm:text-6xl my-4 ${orbitron.className} tracking-wide`}
+          >
+            Leaderboard
+          </h1>
+        </motion.div>
       )
     } else
       return (
-        <h1
-          className={`text-4xl sm:text-6xl text-center py-24 ${orbitron.className} tracking-wide`}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 1 }}
         >
-          Sorry, that page couldn&apos;t be found!
-        </h1>
+          <h1
+            className={`text-4xl sm:text-6xl text-center py-24 ${orbitron.className} tracking-wide`}
+          >
+            Sorry, that page couldn&apos;t be found!
+          </h1>
+        </motion.div>
       )
   }
   return <header className="text-center pt-12">{getHeader()}</header>

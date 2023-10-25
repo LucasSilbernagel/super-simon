@@ -5,6 +5,7 @@ import { updateDifficulty } from '@/app/redux/features/difficultySlice'
 import { useAppDispatch, useAppSelector } from '../../redux/hooks'
 import './Difficulty.css'
 import { orbitron } from '@/app/fonts'
+import { motion } from 'framer-motion'
 
 export type Difficulty = 'EASY' | 'NORMAL' | 'HARD' | 'SUPER SIMON'
 
@@ -27,9 +28,20 @@ export default function Difficulty() {
     }
   }
 
+  const loadingVariants = {
+    hidden: { opacity: 0, x: -200, y: 0 },
+    enter: { opacity: 1, x: 0, y: 0 },
+  }
+
   if (gameStatus.value === 'PAGELOAD') {
     return (
-      <div className="Difficulty">
+      <motion.div
+        variants={loadingVariants}
+        initial="hidden"
+        animate="enter"
+        transition={{ delay: 0.5 }}
+        className="Difficulty"
+      >
         <h3 className="text-3xl mb-8">Select a difficulty:</h3>
         <ul>
           {difficulties.map((difficulty) => (
@@ -49,7 +61,7 @@ export default function Difficulty() {
             </li>
           ))}
         </ul>
-      </div>
+      </motion.div>
     )
   } else return null
 }

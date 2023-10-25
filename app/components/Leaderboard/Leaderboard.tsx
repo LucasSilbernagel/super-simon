@@ -7,6 +7,7 @@ import { getTabsFromFirebase } from '@/app/utils/getTabsFromFirebase'
 import Loader from '../Loader/Loader'
 import ErrorMessage from '../ErrorMessage/ErrorMessage'
 import { useAppSelector } from '@/app/redux/hooks'
+import { motion } from 'framer-motion'
 
 export interface ILeaderboardCollection {
   [key: string]: { id: string; player: string; score: number }[]
@@ -43,9 +44,20 @@ const Leaderboard = () => {
     fetchAllCollections()
   }, [])
 
+  const loadingVariants = {
+    hidden: { opacity: 0 },
+    enter: { opacity: 1 },
+  }
+
   if (allCollectionData && !isLoading && !leaderboardError) {
     return (
-      <div className="max-w-max mx-auto bg-white text-black my-12 p-8 rounded-md">
+      <motion.div
+        variants={loadingVariants}
+        initial="hidden"
+        animate="enter"
+        transition={{ delay: 0.5 }}
+        className="max-w-max mx-auto bg-white text-black my-12 p-8 rounded-md"
+      >
         <Tabs
           defaultTab={difficulties.findIndex(
             (item) =>
@@ -55,7 +67,13 @@ const Leaderboard = () => {
             return {
               label: tab.label,
               content: (
-                <ol className="list-decimal max-w-max mx-auto pt-4 min-h-[330px]">
+                <motion.ol
+                  variants={loadingVariants}
+                  initial="hidden"
+                  animate="enter"
+                  transition={{ delay: 0.2 }}
+                  className="list-decimal max-w-max mx-auto pt-4 min-h-[330px]"
+                >
                   {tab.content
                     .sort((a, b) => b.score - a.score)
                     .slice(0, 10)
@@ -67,12 +85,12 @@ const Leaderboard = () => {
                         </li>
                       )
                     })}
-                </ol>
+                </motion.ol>
               ),
             }
           })}
         />
-      </div>
+      </motion.div>
     )
   } else if (isLoading) {
     return (
