@@ -16,7 +16,7 @@ const Header = () => {
           >
             Super Simon
           </h1>
-          <h2 className="text-2xl leading-relaxed mt-8">
+          <h2 className="text-2xl leading-relaxed mt-8 px-2 sm:px-0">
             The classic memory game Simon, with a twist! <br /> How long of a
             sequence can you remember?
           </h2>
