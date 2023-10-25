@@ -53,7 +53,11 @@ export default function GameBoard() {
 
   const handleWedgeClick = (id: string) => {
     setLastClickedWedge(id)
-    synth.triggerAttackRelease(tones[id as keyof typeof tones], '16n')
+    synth.triggerAttackRelease(
+      tones[id as keyof typeof tones],
+      '16n',
+      Tone.now()
+    )
     const newPlayerSequence = [...playerSequence]
     newPlayerSequence.push(id)
     setPlayerSequence(newPlayerSequence)
@@ -95,7 +99,11 @@ export default function GameBoard() {
       await new Promise((resolve) => {
         setTimeout(() => {
           setBotClick(item)
-          synth.triggerAttackRelease(tones[item as keyof typeof tones], '16n')
+          synth.triggerAttackRelease(
+            tones[item as keyof typeof tones],
+            '16n',
+            Tone.now()
+          )
           resolve(undefined)
           setTimeout(
             () => setBotClick(''),
