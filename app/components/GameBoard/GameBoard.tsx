@@ -4,7 +4,6 @@ import { updateGameStatus } from '@/app/redux/features/gameStatusSlice'
 import { useAppDispatch, useAppSelector } from '../../redux/hooks'
 import './GameBoard.css'
 import { useEffect, useState } from 'react'
-import * as Tone from 'tone'
 import { getRandomInteger } from '@/app/utils/getRandomInteger'
 import { Difficulty } from '../Difficulty/Difficulty'
 import getCollection from '@/app/firebase/getData'
@@ -12,14 +11,13 @@ import removeFromCollection from '@/app/firebase/removeData'
 import EndgameModal from '../EndgameModal/EndgameModal'
 import ErrorMessage from '../ErrorMessage/ErrorMessage'
 import { motion } from 'framer-motion'
+import { Howl } from 'howler'
 
 export default function GameBoard() {
   const gameStatus = useAppSelector((state) => state.gameStatusReducer)
   const selectedDifficulty = useAppSelector((state) => state.difficultyReducer)
 
   const dispatch = useAppDispatch()
-
-  const synth = new Tone.Synth().toDestination()
 
   const [lastClickedWedge, setLastClickedWedge] = useState<string>('')
   const [botSequence, setBotSequence] = useState<string[]>([])
@@ -45,11 +43,24 @@ export default function GameBoard() {
     { label: 'blue', style: 'bg-blue-500 bottom-0 right-0' },
   ]
 
-  const tones = { '0': 'F3', '1': 'D3', '2': 'B3', '3': 'G3' }
+  const tone0 = new Howl({
+    src: ['0.mp3'],
+  })
+  const tone1 = new Howl({
+    src: ['1.mp3'],
+  })
+  const tone2 = new Howl({
+    src: ['2.mp3'],
+  })
+  const tone3 = new Howl({
+    src: ['3.mp3'],
+  })
+
+  const tones = { '0': tone0, '1': tone1, '2': tone2, '3': tone3 }
 
   const handleWedgeClick = (id: string) => {
     setLastClickedWedge(id)
-    synth.triggerAttackRelease(tones[id as keyof typeof tones], '16n')
+    tones[id as keyof typeof tones].play()
     const newPlayerSequence = [...playerSequence]
     newPlayerSequence.push(id)
     setPlayerSequence(newPlayerSequence)
@@ -91,7 +102,7 @@ export default function GameBoard() {
       await new Promise((resolve) => {
         setTimeout(() => {
           setBotClick(item)
-          synth.triggerAttackRelease(tones[item as keyof typeof tones], '16n')
+          tones[item as keyof typeof tones].play()
           resolve(undefined)
           setTimeout(
             () => setBotClick(''),
@@ -243,8 +254,7 @@ export default function GameBoard() {
             })}
             {gameStatus.value === 'UNSTARTED' && (
               <button
-                onClick={async () => {
-                  await Tone.start()
+                onClick={() => {
                   setPlayerScore(0)
                   setPlayerSequence([])
                   setBotSequence([])
