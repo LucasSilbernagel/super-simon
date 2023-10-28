@@ -167,24 +167,23 @@ export default function EndgameModal(props: IEndgameModalProps) {
           Game over!
         </h3>
         <h4 className="text-center text-3xl my-4">Score: {playerScore}</h4>
-        {!shouldPostNewRecord ||
-          (!isOnline.value && (
-            <div className="text-center my-2">
-              <button
-                onClick={() => {
-                  dispatch(updateGameStatus({ value: 'PAGELOAD' }))
-                  setPlayerScore(0)
-                  setPlayerSequence([])
-                  setBotSequence([])
-                  setIsModalOpen(false)
-                  setPlayerInitials('')
-                }}
-                className={`Button ${orbitron.className} tracking-widest`}
-              >
-                Play again?
-              </button>
-            </div>
-          ))}
+        {!shouldPostNewRecord || !isOnline.value ? (
+          <div className="text-center my-2">
+            <button
+              onClick={() => {
+                dispatch(updateGameStatus({ value: 'PAGELOAD' }))
+                setPlayerScore(0)
+                setPlayerSequence([])
+                setBotSequence([])
+                setIsModalOpen(false)
+                setPlayerInitials('')
+              }}
+              className={`Button ${orbitron.className} tracking-widest`}
+            >
+              Play again?
+            </button>
+          </div>
+        ) : null}
         {shouldPostNewRecord && isOnline.value && (
           <form
             onSubmit={(e) => handleSubmitScore(e)}
