@@ -44,16 +44,16 @@ export default function GameBoard() {
   ]
 
   const tone0 = new Howl({
-    src: ['0.mp3'],
+    src: ['audio/0.mp3'],
   })
   const tone1 = new Howl({
-    src: ['1.mp3'],
+    src: ['audio/1.mp3'],
   })
   const tone2 = new Howl({
-    src: ['2.mp3'],
+    src: ['audio/2.mp3'],
   })
   const tone3 = new Howl({
-    src: ['3.mp3'],
+    src: ['audio/3.mp3'],
   })
 
   const tones = { '0': tone0, '1': tone1, '2': tone2, '3': tone3 }
