@@ -12,10 +12,12 @@ import EndgameModal from '../EndgameModal/EndgameModal'
 import ErrorMessage from '../ErrorMessage/ErrorMessage'
 import { motion } from 'framer-motion'
 import { Howl } from 'howler'
+import { updateOnlineStatus } from '@/app/redux/features/onlineStatusSlice'
 
 export default function GameBoard() {
   const gameStatus = useAppSelector((state) => state.gameStatusReducer)
   const selectedDifficulty = useAppSelector((state) => state.difficultyReducer)
+  const isOnline = useAppSelector((state) => state.onlineStatusReducer)
 
   const dispatch = useAppDispatch()
 
@@ -68,6 +70,18 @@ export default function GameBoard() {
 
   useEffect(() => {
     dispatch(updateGameStatus({ value: 'PAGELOAD' }))
+    const handleOnline = () => {
+      dispatch(updateOnlineStatus({ value: true }))
+    }
+    const handleOffline = () => {
+      dispatch(updateOnlineStatus({ value: false }))
+    }
+    window.addEventListener('online', handleOnline)
+    window.addEventListener('offline', handleOffline)
+    return () => {
+      window.removeEventListener('online', handleOnline)
+      window.removeEventListener('offline', handleOffline)
+    }
   }, [])
 
   useEffect(() => {
@@ -185,8 +199,10 @@ export default function GameBoard() {
         console.error(error)
       }
     }
-    fetchCollectionData()
-  }, [playerScore, selectedDifficulty.value])
+    if (isOnline.value) {
+      fetchCollectionData()
+    }
+  }, [playerScore, selectedDifficulty.value, isOnline.value])
 
   useEffect(() => {
     // If a leaderboard category has more than 10 scores, remove the lowest scores so that only 10 remain
@@ -211,8 +227,10 @@ export default function GameBoard() {
         }
       }
     }
-    onlySaveTenScoresPerCategory()
-  }, [categoryScores, selectedDifficulty])
+    if (isOnline.value) {
+      onlySaveTenScoresPerCategory()
+    }
+  }, [categoryScores, selectedDifficulty, isOnline.value])
 
   const isSuperSimonMode =
     gameStatus.value === 'STARTED' && selectedDifficulty.value === 'SUPER SIMON'

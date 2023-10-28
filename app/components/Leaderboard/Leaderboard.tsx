@@ -6,8 +6,9 @@ import { useEffect, useState } from 'react'
 import { getTabsFromFirebase } from '@/app/utils/getTabsFromFirebase'
 import Loader from '../Loader/Loader'
 import ErrorMessage from '../ErrorMessage/ErrorMessage'
-import { useAppSelector } from '@/app/redux/hooks'
+import { useAppDispatch, useAppSelector } from '@/app/redux/hooks'
 import { motion } from 'framer-motion'
+import { updateOnlineStatus } from '@/app/redux/features/onlineStatusSlice'
 
 export interface ILeaderboardCollection {
   [key: string]: { id: string; player: string; score: number }[]
@@ -22,6 +23,9 @@ const Leaderboard = () => {
   const selectedDifficulty = useAppSelector((state) => state.difficultyReducer)
 
   const difficulties = ['easy', 'normal', 'hard', 'super-simon']
+
+  const dispatch = useAppDispatch()
+  const isOnline = useAppSelector((state) => state.onlineStatusReducer)
 
   useEffect(() => {
     const allCollections: ILeaderboardCollection = {}
@@ -41,7 +45,21 @@ const Leaderboard = () => {
       setAllCollectionData(allCollections)
       setIsLoading(false)
     }
-    fetchAllCollections()
+    if (isOnline.value) {
+      fetchAllCollections()
+    }
+    const handleOnline = () => {
+      dispatch(updateOnlineStatus({ value: true }))
+    }
+    const handleOffline = () => {
+      dispatch(updateOnlineStatus({ value: false }))
+    }
+    window.addEventListener('online', handleOnline)
+    window.addEventListener('offline', handleOffline)
+    return () => {
+      window.removeEventListener('online', handleOnline)
+      window.removeEventListener('offline', handleOffline)
+    }
   }, [])
 
   const loadingVariants = {
@@ -97,6 +115,12 @@ const Leaderboard = () => {
       <div className="w-full flex justify-center items-center min-h-[531px]">
         <Loader />
       </div>
+    )
+  } else if (!isOnline.value) {
+    return (
+      <ErrorMessage
+        errorText={`Unable to load the leaderboard because you are offline!`}
+      />
     )
   } else {
     return (

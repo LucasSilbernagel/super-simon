@@ -9,6 +9,7 @@ import { FaTimes } from 'react-icons/fa'
 import addToCollection from '@/app/firebase/addData'
 import { useRouter } from 'next/navigation'
 import { orbitron } from '@/app/fonts'
+import { updateOnlineStatus } from '@/app/redux/features/onlineStatusSlice'
 
 interface IEndgameModalProps {
   isModalOpen: boolean
@@ -33,6 +34,8 @@ export default function EndgameModal(props: IEndgameModalProps) {
     setPlayerScore,
   } = props
 
+  const isOnline = useAppSelector((state) => state.onlineStatusReducer)
+
   const { push } = useRouter()
   const selectedDifficulty = useAppSelector((state) => state.difficultyReducer)
 
@@ -55,6 +58,18 @@ export default function EndgameModal(props: IEndgameModalProps) {
 
   useEffect(() => {
     Modal.setAppElement('body')
+    const handleOnline = () => {
+      dispatch(updateOnlineStatus({ value: true }))
+    }
+    const handleOffline = () => {
+      dispatch(updateOnlineStatus({ value: false }))
+    }
+    window.addEventListener('online', handleOnline)
+    window.addEventListener('offline', handleOffline)
+    return () => {
+      window.removeEventListener('online', handleOnline)
+      window.removeEventListener('offline', handleOffline)
+    }
   }, [])
 
   useEffect(() => {
@@ -152,24 +167,25 @@ export default function EndgameModal(props: IEndgameModalProps) {
           Game over!
         </h3>
         <h4 className="text-center text-3xl my-4">Score: {playerScore}</h4>
-        {!shouldPostNewRecord && (
-          <div className="text-center my-2">
-            <button
-              onClick={() => {
-                dispatch(updateGameStatus({ value: 'PAGELOAD' }))
-                setPlayerScore(0)
-                setPlayerSequence([])
-                setBotSequence([])
-                setIsModalOpen(false)
-                setPlayerInitials('')
-              }}
-              className={`Button ${orbitron.className} tracking-widest`}
-            >
-              Play again?
-            </button>
-          </div>
-        )}
-        {shouldPostNewRecord && (
+        {!shouldPostNewRecord ||
+          (!isOnline.value && (
+            <div className="text-center my-2">
+              <button
+                onClick={() => {
+                  dispatch(updateGameStatus({ value: 'PAGELOAD' }))
+                  setPlayerScore(0)
+                  setPlayerSequence([])
+                  setBotSequence([])
+                  setIsModalOpen(false)
+                  setPlayerInitials('')
+                }}
+                className={`Button ${orbitron.className} tracking-widest`}
+              >
+                Play again?
+              </button>
+            </div>
+          ))}
+        {shouldPostNewRecord && isOnline.value && (
           <form
             onSubmit={(e) => handleSubmitScore(e)}
             className="flex flex-col items-center gap-2"
