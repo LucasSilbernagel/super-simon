@@ -6,7 +6,6 @@ const withPWA = require('next-pwa')({
   register: true,
   disable: prod ? false : true,
   skipWaiting: true,
-  cacheOnFrontEndNav: true,
 })
 
 module.exports = withPWA({
