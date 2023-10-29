@@ -16,7 +16,7 @@ const Header = () => {
           >
             Super Simon
           </h1>
-          <h2 className="text-2xl leading-relaxed mt-8 px-2 sm:px-0">
+          <h2 className="text-xl sm:text-2xl leading-relaxed mt-8 px-2 sm:px-0">
             The classic memory game Simon, with a twist! <br /> How long of a
             sequence can you remember?
           </h2>
@@ -44,7 +44,7 @@ const Header = () => {
           transition={{ duration: 1 }}
         >
           <h1
-            className={`text-4xl sm:text-6xl text-center py-24 ${orbitron.className} tracking-wide`}
+            className={`text-4xl sm:text-5xl text-center py-24 ${orbitron.className} tracking-wide`}
           >
             Sorry, that page couldn&apos;t be found!
           </h1>
