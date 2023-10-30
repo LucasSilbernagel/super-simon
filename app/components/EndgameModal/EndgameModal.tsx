@@ -9,7 +9,7 @@ import { FaTimes } from 'react-icons/fa'
 import addToCollection from '@/app/firebase/addData'
 import { useRouter } from 'next/navigation'
 import { orbitron } from '@/app/fonts'
-import { updateOnlineStatus } from '@/app/redux/features/onlineStatusSlice'
+import useCheckInternetConnection from '@/app/hooks/useCheckInternetConnection'
 
 interface IEndgameModalProps {
   isModalOpen: boolean
@@ -36,6 +36,8 @@ export default function EndgameModal(props: IEndgameModalProps) {
 
   const isOnline = useAppSelector((state) => state.onlineStatusReducer)
 
+  useCheckInternetConnection()
+
   const { push } = useRouter()
   const selectedDifficulty = useAppSelector((state) => state.difficultyReducer)
 
@@ -58,18 +60,6 @@ export default function EndgameModal(props: IEndgameModalProps) {
 
   useEffect(() => {
     Modal.setAppElement('body')
-    const handleOnline = () => {
-      dispatch(updateOnlineStatus({ value: true }))
-    }
-    const handleOffline = () => {
-      dispatch(updateOnlineStatus({ value: false }))
-    }
-    window.addEventListener('online', handleOnline)
-    window.addEventListener('offline', handleOffline)
-    return () => {
-      window.removeEventListener('online', handleOnline)
-      window.removeEventListener('offline', handleOffline)
-    }
   }, [])
 
   useEffect(() => {

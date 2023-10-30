@@ -6,9 +6,9 @@ import { useEffect, useState } from 'react'
 import { getTabsFromFirebase } from '@/app/utils/getTabsFromFirebase'
 import Loader from '../Loader/Loader'
 import ErrorMessage from '../ErrorMessage/ErrorMessage'
-import { useAppDispatch, useAppSelector } from '@/app/redux/hooks'
+import { useAppSelector } from '@/app/redux/hooks'
 import { motion } from 'framer-motion'
-import { updateOnlineStatus } from '@/app/redux/features/onlineStatusSlice'
+import useCheckInternetConnection from '@/app/hooks/useCheckInternetConnection'
 
 export interface ILeaderboardCollection {
   [key: string]: { id: string; player: string; score: number }[]
@@ -24,8 +24,9 @@ const Leaderboard = () => {
 
   const difficulties = ['easy', 'normal', 'hard', 'super-simon']
 
-  const dispatch = useAppDispatch()
   const isOnline = useAppSelector((state) => state.onlineStatusReducer)
+
+  useCheckInternetConnection()
 
   useEffect(() => {
     const allCollections: ILeaderboardCollection = {}
@@ -48,18 +49,6 @@ const Leaderboard = () => {
     if (isOnline.value) {
       fetchAllCollections()
     }
-    const handleOnline = () => {
-      dispatch(updateOnlineStatus({ value: true }))
-    }
-    const handleOffline = () => {
-      dispatch(updateOnlineStatus({ value: false }))
-    }
-    window.addEventListener('online', handleOnline)
-    window.addEventListener('offline', handleOffline)
-    return () => {
-      window.removeEventListener('online', handleOnline)
-      window.removeEventListener('offline', handleOffline)
-    }
   }, [])
 
   const loadingVariants = {
@@ -67,7 +56,7 @@ const Leaderboard = () => {
     enter: { opacity: 1 },
   }
 
-  if (allCollectionData && !isLoading && !leaderboardError) {
+  if (allCollectionData && !isLoading && !leaderboardError && isOnline.value) {
     return (
       <motion.div
         variants={loadingVariants}

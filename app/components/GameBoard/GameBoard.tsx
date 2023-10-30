@@ -12,12 +12,14 @@ import EndgameModal from '../EndgameModal/EndgameModal'
 import ErrorMessage from '../ErrorMessage/ErrorMessage'
 import { motion } from 'framer-motion'
 import { Howl } from 'howler'
-import { updateOnlineStatus } from '@/app/redux/features/onlineStatusSlice'
+import useCheckInternetConnection from '@/app/hooks/useCheckInternetConnection'
 
 export default function GameBoard() {
   const gameStatus = useAppSelector((state) => state.gameStatusReducer)
   const selectedDifficulty = useAppSelector((state) => state.difficultyReducer)
   const isOnline = useAppSelector((state) => state.onlineStatusReducer)
+
+  useCheckInternetConnection()
 
   const dispatch = useAppDispatch()
 
@@ -70,18 +72,6 @@ export default function GameBoard() {
 
   useEffect(() => {
     dispatch(updateGameStatus({ value: 'PAGELOAD' }))
-    const handleOnline = () => {
-      dispatch(updateOnlineStatus({ value: true }))
-    }
-    const handleOffline = () => {
-      dispatch(updateOnlineStatus({ value: false }))
-    }
-    window.addEventListener('online', handleOnline)
-    window.addEventListener('offline', handleOffline)
-    return () => {
-      window.removeEventListener('online', handleOnline)
-      window.removeEventListener('offline', handleOffline)
-    }
   }, [])
 
   useEffect(() => {

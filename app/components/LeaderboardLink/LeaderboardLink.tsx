@@ -3,28 +3,13 @@ import { orbitron } from '@/app/fonts'
 import Link from 'next/link'
 import { FaArrowRight } from 'react-icons/fa'
 import { motion } from 'framer-motion'
-import { useAppDispatch, useAppSelector } from '@/app/redux/hooks'
-import { useEffect } from 'react'
-import { updateOnlineStatus } from '@/app/redux/features/onlineStatusSlice'
+import { useAppSelector } from '@/app/redux/hooks'
+import useCheckInternetConnection from '@/app/hooks/useCheckInternetConnection'
 
 const LeaderboardLink = () => {
-  const dispatch = useAppDispatch()
   const isOnline = useAppSelector((state) => state.onlineStatusReducer)
 
-  useEffect(() => {
-    const handleOnline = () => {
-      dispatch(updateOnlineStatus({ value: true }))
-    }
-    const handleOffline = () => {
-      dispatch(updateOnlineStatus({ value: false }))
-    }
-    window.addEventListener('online', handleOnline)
-    window.addEventListener('offline', handleOffline)
-    return () => {
-      window.removeEventListener('online', handleOnline)
-      window.removeEventListener('offline', handleOffline)
-    }
-  }, [])
+  useCheckInternetConnection()
 
   if (isOnline.value) {
     return (
