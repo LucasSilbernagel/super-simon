@@ -13,11 +13,14 @@ const InstallationButton = () => {
   )
   const dispatch = useAppDispatch()
 
+  let deferredPrompt: IBeforeInstallPromptEvent | null = null
+
   useEffect(() => {
     const handleBeforeInstallPrompt = (e: IBeforeInstallPromptEvent) => {
       // Prevent Chrome 67 and earlier from automatically showing the prompt
       e.preventDefault()
       // Stash the event so it can be triggered later
+      deferredPrompt = e
       dispatch(updateInstallationPrompt({ value: e }))
     }
 
@@ -34,7 +37,6 @@ const InstallationButton = () => {
   }, [])
 
   const handleInstall = () => {
-    console.log(installationPrompt.value)
     // if (!installationPrompt.value) return
     // installationPrompt.value.showPrompt()
     // installationPrompt.value.userChoice.then((choiceResult) => {
@@ -45,6 +47,20 @@ const InstallationButton = () => {
     //   }
     // })
     // dispatch(updateInstallationPrompt({ value: null }))
+    if (!deferredPrompt) return
+
+    console.log(deferredPrompt)
+
+    deferredPrompt.prompt()
+    deferredPrompt.userChoice.then((choiceResult) => {
+      if (choiceResult.outcome === 'accepted') {
+        console.log('User accepted the install prompt')
+      } else {
+        console.log('User dismissed the install prompt')
+      }
+    })
+
+    deferredPrompt = null // Clear the reference after using it
   }
 
   return (

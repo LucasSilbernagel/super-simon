@@ -1,6 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
 export interface IBeforeInstallPromptEvent extends Event {
+  prompt(): unknown
   showPrompt: () => void
   userChoice: Promise<{ outcome: 'accepted' | 'dismissed'; platform: string }>
 }
