@@ -20,7 +20,6 @@ const InstallationButton = () => {
       // Stash the event so it can be triggered later
       dispatch(updateInstallationPrompt({ value: e }))
     }
-
     window.addEventListener(
       'beforeinstallprompt',
       handleBeforeInstallPrompt as EventListenerOrEventListenerObject
@@ -35,16 +34,7 @@ const InstallationButton = () => {
 
   const handleInstall = async () => {
     if (!installationPrompt.value) return
-    const result = await installationPrompt.value.prompt()
-    console.log(result)
-    // installationPrompt.value.showPrompt()
-    // installationPrompt.value.userChoice.then((choiceResult) => {
-    //   if (choiceResult.outcome === 'accepted') {
-    //     console.log('User accepted the install prompt')
-    //   } else {
-    //     console.log('User dismissed the install prompt')
-    //   }
-    // })
+    await installationPrompt.value.prompt()
     dispatch(updateInstallationPrompt({ value: null }))
   }
 
