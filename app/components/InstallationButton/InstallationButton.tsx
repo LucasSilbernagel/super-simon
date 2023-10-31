@@ -1,0 +1,69 @@
+'use client'
+import {
+  IBeforeInstallPromptEvent,
+  updateInstallationPrompt,
+} from '@/app/redux/features/installationPromptSlice'
+import { useAppDispatch, useAppSelector } from '@/app/redux/hooks'
+import { useEffect } from 'react'
+import { FaTimes } from 'react-icons/fa'
+
+const InstallationButton = () => {
+  const installationPrompt = useAppSelector(
+    (state) => state.installationPromptReducer
+  )
+  const dispatch = useAppDispatch()
+
+  useEffect(() => {
+    const handleBeforeInstallPrompt = (e: IBeforeInstallPromptEvent) => {
+      // Prevent Chrome 67 and earlier from automatically showing the prompt
+      e.preventDefault()
+      // Stash the event so it can be triggered later
+      dispatch(updateInstallationPrompt({ value: e }))
+    }
+
+    window.addEventListener(
+      'beforeinstallprompt',
+      handleBeforeInstallPrompt as EventListenerOrEventListenerObject
+    )
+    return () => {
+      window.removeEventListener(
+        'beforeinstallprompt',
+        handleBeforeInstallPrompt as EventListenerOrEventListenerObject
+      )
+    }
+  }, [])
+
+  const onInstall = () => {
+    if (!installationPrompt.value) return
+    installationPrompt.value.showPrompt()
+    installationPrompt.value.userChoice.then((choiceResult) => {
+      if (choiceResult.outcome === 'accepted') {
+        console.log('User accepted the install prompt')
+      } else {
+        console.log('User dismissed the install prompt')
+      }
+    })
+    dispatch(updateInstallationPrompt({ value: null }))
+  }
+
+  return (
+    <div>
+      {installationPrompt.value && (
+        <div className="fixed top-2 left-1/2 -translate-x-1/2 z-20 flex gap-6">
+          <button onClick={onInstall} className="Button">
+            Install Super Simon
+          </button>
+          <button
+            onClick={() => dispatch(updateInstallationPrompt({ value: null }))}
+            className="Button"
+            aria-label="Do not install Super Simon on my device"
+          >
+            <FaTimes />
+          </button>
+        </div>
+      )}
+    </div>
+  )
+}
+
+export default InstallationButton
