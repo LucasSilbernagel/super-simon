@@ -33,24 +33,25 @@ const InstallationButton = () => {
     }
   }, [])
 
-  const onInstall = () => {
-    if (!installationPrompt.value) return
-    installationPrompt.value.showPrompt()
-    installationPrompt.value.userChoice.then((choiceResult) => {
-      if (choiceResult.outcome === 'accepted') {
-        console.log('User accepted the install prompt')
-      } else {
-        console.log('User dismissed the install prompt')
-      }
-    })
-    dispatch(updateInstallationPrompt({ value: null }))
+  const handleInstall = () => {
+    console.log(installationPrompt.value)
+    // if (!installationPrompt.value) return
+    // installationPrompt.value.showPrompt()
+    // installationPrompt.value.userChoice.then((choiceResult) => {
+    //   if (choiceResult.outcome === 'accepted') {
+    //     console.log('User accepted the install prompt')
+    //   } else {
+    //     console.log('User dismissed the install prompt')
+    //   }
+    // })
+    // dispatch(updateInstallationPrompt({ value: null }))
   }
 
   return (
     <div>
       {installationPrompt.value && (
         <div className="fixed top-2 left-1/2 -translate-x-1/2 z-20 flex gap-4 items-center">
-          <button onClick={onInstall} className="Button w-[197px]">
+          <button onClick={handleInstall} className="Button w-[197px]">
             Install Super Simon
           </button>
           <button
