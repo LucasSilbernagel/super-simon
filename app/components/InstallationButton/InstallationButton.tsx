@@ -49,13 +49,13 @@ const InstallationButton = () => {
   return (
     <div>
       {installationPrompt.value && (
-        <div className="fixed top-2 left-1/2 -translate-x-1/2 z-20 flex gap-6">
-          <button onClick={onInstall} className="Button">
+        <div className="fixed top-2 left-1/2 -translate-x-1/2 z-20 flex gap-4 items-center">
+          <button onClick={onInstall} className="Button w-[197px]">
             Install Super Simon
           </button>
           <button
             onClick={() => dispatch(updateInstallationPrompt({ value: null }))}
-            className="Button"
+            className="Button max-h-min"
             aria-label="Do not install Super Simon on my device"
           >
             <FaTimes />
