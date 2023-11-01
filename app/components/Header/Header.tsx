@@ -4,9 +4,11 @@ import { orbitron } from '@/app/fonts'
 import { usePathname } from 'next/navigation'
 import { motion } from 'framer-motion'
 import useCheckForUpdate from '@/app/hooks/useCheckForUpdate'
+import useCheckInternetConnection from '@/app/hooks/useCheckInternetConnection'
 
 const Header = () => {
   useCheckForUpdate()
+  useCheckInternetConnection()
   const pathname = usePathname()
 
   const getHeader = () => {

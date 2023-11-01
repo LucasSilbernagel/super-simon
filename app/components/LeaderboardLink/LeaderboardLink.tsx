@@ -4,12 +4,9 @@ import Link from 'next/link'
 import { FaArrowRight } from 'react-icons/fa'
 import { motion } from 'framer-motion'
 import { useAppSelector } from '@/app/redux/hooks'
-import useCheckInternetConnection from '@/app/hooks/useCheckInternetConnection'
 
 const LeaderboardLink = () => {
   const isOnline = useAppSelector((state) => state.onlineStatusReducer)
-
-  useCheckInternetConnection()
 
   if (isOnline.value) {
     return (

@@ -12,14 +12,11 @@ import EndgameModal from '../EndgameModal/EndgameModal'
 import ErrorMessage from '../ErrorMessage/ErrorMessage'
 import { motion } from 'framer-motion'
 import { Howl } from 'howler'
-import useCheckInternetConnection from '@/app/hooks/useCheckInternetConnection'
 
 export default function GameBoard() {
   const gameStatus = useAppSelector((state) => state.gameStatusReducer)
   const selectedDifficulty = useAppSelector((state) => state.difficultyReducer)
   const isOnline = useAppSelector((state) => state.onlineStatusReducer)
-
-  useCheckInternetConnection()
 
   const dispatch = useAppDispatch()
 

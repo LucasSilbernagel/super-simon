@@ -9,7 +9,6 @@ import { FaTimes } from 'react-icons/fa'
 import addToCollection from '@/app/firebase/addData'
 import { useRouter } from 'next/navigation'
 import { orbitron } from '@/app/fonts'
-import useCheckInternetConnection from '@/app/hooks/useCheckInternetConnection'
 
 interface IEndgameModalProps {
   isModalOpen: boolean
@@ -35,8 +34,6 @@ export default function EndgameModal(props: IEndgameModalProps) {
   } = props
 
   const isOnline = useAppSelector((state) => state.onlineStatusReducer)
-
-  useCheckInternetConnection()
 
   const { push } = useRouter()
   const selectedDifficulty = useAppSelector((state) => state.difficultyReducer)

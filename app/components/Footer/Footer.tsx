@@ -1,12 +1,9 @@
 'use client'
-import useCheckInternetConnection from '@/app/hooks/useCheckInternetConnection'
 import { useAppSelector } from '@/app/redux/hooks'
 import { motion } from 'framer-motion'
 
 const Footer = () => {
   const isOnline = useAppSelector((state) => state.onlineStatusReducer)
-
-  useCheckInternetConnection()
 
   return (
     <motion.footer

@@ -8,7 +8,6 @@ import Loader from '../Loader/Loader'
 import ErrorMessage from '../ErrorMessage/ErrorMessage'
 import { useAppSelector } from '@/app/redux/hooks'
 import { motion } from 'framer-motion'
-import useCheckInternetConnection from '@/app/hooks/useCheckInternetConnection'
 
 export interface ILeaderboardCollection {
   [key: string]: { id: string; player: string; score: number }[]
@@ -25,8 +24,6 @@ const Leaderboard = () => {
   const difficulties = ['easy', 'normal', 'hard', 'super-simon']
 
   const isOnline = useAppSelector((state) => state.onlineStatusReducer)
-
-  useCheckInternetConnection()
 
   useEffect(() => {
     const allCollections: ILeaderboardCollection = {}
