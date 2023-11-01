@@ -3,8 +3,10 @@
 import { orbitron } from '@/app/fonts'
 import { usePathname } from 'next/navigation'
 import { motion } from 'framer-motion'
+import useCheckForUpdate from '@/app/hooks/useCheckForUpdate'
 
 const Header = () => {
+  useCheckForUpdate()
   const pathname = usePathname()
 
   const getHeader = () => {
