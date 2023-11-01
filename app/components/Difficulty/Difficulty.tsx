@@ -13,7 +13,7 @@ export default function Difficulty() {
   const gameStatus = useAppSelector((state) => state.gameStatusReducer)
   const dispatch = useAppDispatch()
 
-  const difficulties = ['EASY', 'NORMAL', 'HARD']
+  const difficulties = ['EASY', 'NORMAL', 'HARD', 'SUPER SIMON']
 
   const getButtonColour = (difficulty: Difficulty) => {
     switch (difficulty) {
