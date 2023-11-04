@@ -1,4 +1,5 @@
 /** @type {import('next').NextConfig} */
+const withPWAInit = require("next-pwa");
 
 const prod = process.env.NODE_ENV === 'production'
 
@@ -7,14 +8,19 @@ const withPWA = require('next-pwa')({
   register: true,
   disable: prod ? false : true,
   skipWaiting: true,
-  runtimeCaching: [
-    {
-      urlPattern: /\/_next\/static\/chunks\/pages\/.*/,
-      handler: 'CacheFirst',
-      options: {
-        cacheName: 'html-cache',
-      },
-    },
+  exclude: [
+    ({ asset }) => {
+      if (
+        asset.name.startsWith("server/") ||
+        asset.name.match(/^((app-|^)build-manifest\.json|react-loadable-manifest\.json)$/)
+      ) {
+        return true;
+      }
+      if (!prod && !asset.name.startsWith("static/runtime/")) {
+        return true;
+      }
+      return false;
+    }
   ],
 })
 
