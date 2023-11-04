@@ -1,7 +1,10 @@
 'use client'
+import { useAppSelector } from '@/app/redux/hooks'
 import { motion } from 'framer-motion'
 
 const Footer = () => {
+  const isOnline = useAppSelector((state) => state.onlineStatusReducer)
+
   return (
     <motion.footer
       initial={{ opacity: 0 }}
@@ -9,17 +12,21 @@ const Footer = () => {
       transition={{ delay: 0.5 }}
       className="pb-4"
     >
-      <p className="text-center">
-        Built by{' '}
-        <a
-          href="https://lucassilbernagel.com/"
-          target="_blank"
-          rel="noreferrer"
-          className="Link"
-        >
-          Lucas Silbernagel
-        </a>
-      </p>
+      {isOnline.value ? (
+        <p className="text-center">
+          Built by{' '}
+          <a
+            href="https://lucassilbernagel.com/"
+            target="_blank"
+            rel="noreferrer"
+            className="Link"
+          >
+            Lucas Silbernagel
+          </a>
+        </p>
+      ) : (
+        <p className="text-center">Built by Lucas Silbernagel</p>
+      )}
     </motion.footer>
   )
 }

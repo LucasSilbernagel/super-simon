@@ -23,6 +23,8 @@ const Leaderboard = () => {
 
   const difficulties = ['easy', 'normal', 'hard', 'super-simon']
 
+  const isOnline = useAppSelector((state) => state.onlineStatusReducer)
+
   useEffect(() => {
     const allCollections: ILeaderboardCollection = {}
     const fetchAllCollections = async () => {
@@ -41,7 +43,9 @@ const Leaderboard = () => {
       setAllCollectionData(allCollections)
       setIsLoading(false)
     }
-    fetchAllCollections()
+    if (isOnline.value) {
+      fetchAllCollections()
+    }
   }, [])
 
   const loadingVariants = {
@@ -49,7 +53,7 @@ const Leaderboard = () => {
     enter: { opacity: 1 },
   }
 
-  if (allCollectionData && !isLoading && !leaderboardError) {
+  if (allCollectionData && !isLoading && !leaderboardError && isOnline.value) {
     return (
       <motion.div
         variants={loadingVariants}
@@ -97,6 +101,12 @@ const Leaderboard = () => {
       <div className="w-full flex justify-center items-center min-h-[531px]">
         <Loader />
       </div>
+    )
+  } else if (!isOnline.value) {
+    return (
+      <ErrorMessage
+        errorText={`Unable to load the leaderboard because you are offline!`}
+      />
     )
   } else {
     return (

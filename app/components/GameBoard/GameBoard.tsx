@@ -16,6 +16,7 @@ import { Howl } from 'howler'
 export default function GameBoard() {
   const gameStatus = useAppSelector((state) => state.gameStatusReducer)
   const selectedDifficulty = useAppSelector((state) => state.difficultyReducer)
+  const isOnline = useAppSelector((state) => state.onlineStatusReducer)
 
   const dispatch = useAppDispatch()
 
@@ -44,16 +45,16 @@ export default function GameBoard() {
   ]
 
   const tone0 = new Howl({
-    src: ['0.mp3'],
+    src: ['audio/0.mp3'],
   })
   const tone1 = new Howl({
-    src: ['1.mp3'],
+    src: ['audio/1.mp3'],
   })
   const tone2 = new Howl({
-    src: ['2.mp3'],
+    src: ['audio/2.mp3'],
   })
   const tone3 = new Howl({
-    src: ['3.mp3'],
+    src: ['audio/3.mp3'],
   })
 
   const tones = { '0': tone0, '1': tone1, '2': tone2, '3': tone3 }
@@ -185,8 +186,10 @@ export default function GameBoard() {
         console.error(error)
       }
     }
-    fetchCollectionData()
-  }, [playerScore, selectedDifficulty.value])
+    if (isOnline.value) {
+      fetchCollectionData()
+    }
+  }, [playerScore, selectedDifficulty.value, isOnline.value])
 
   useEffect(() => {
     // If a leaderboard category has more than 10 scores, remove the lowest scores so that only 10 remain
@@ -211,8 +214,10 @@ export default function GameBoard() {
         }
       }
     }
-    onlySaveTenScoresPerCategory()
-  }, [categoryScores, selectedDifficulty])
+    if (isOnline.value) {
+      onlySaveTenScoresPerCategory()
+    }
+  }, [categoryScores, selectedDifficulty, isOnline.value])
 
   const isSuperSimonMode =
     gameStatus.value === 'STARTED' && selectedDifficulty.value === 'SUPER SIMON'

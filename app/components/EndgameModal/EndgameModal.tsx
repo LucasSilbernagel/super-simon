@@ -33,6 +33,8 @@ export default function EndgameModal(props: IEndgameModalProps) {
     setPlayerScore,
   } = props
 
+  const isOnline = useAppSelector((state) => state.onlineStatusReducer)
+
   const { push } = useRouter()
   const selectedDifficulty = useAppSelector((state) => state.difficultyReducer)
 
@@ -152,7 +154,7 @@ export default function EndgameModal(props: IEndgameModalProps) {
           Game over!
         </h3>
         <h4 className="text-center text-3xl my-4">Score: {playerScore}</h4>
-        {!shouldPostNewRecord && (
+        {!shouldPostNewRecord || !isOnline.value ? (
           <div className="text-center my-2">
             <button
               onClick={() => {
@@ -168,8 +170,8 @@ export default function EndgameModal(props: IEndgameModalProps) {
               Play again?
             </button>
           </div>
-        )}
-        {shouldPostNewRecord && (
+        ) : null}
+        {shouldPostNewRecord && isOnline.value && (
           <form
             onSubmit={(e) => handleSubmitScore(e)}
             className="flex flex-col items-center gap-2"
