@@ -39,3 +39,4 @@ next-env.d.ts
 
 # Progressive Web App
 public/workbox-*.js
+public/sw.js
