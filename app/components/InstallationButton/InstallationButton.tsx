@@ -1,24 +1,23 @@
 'use client'
-import {
-  IBeforeInstallPromptEvent,
-  updateInstallationPrompt,
-} from '@/app/redux/features/installationPromptSlice'
-import { useAppDispatch, useAppSelector } from '@/app/redux/hooks'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { FaTimes } from 'react-icons/fa'
 
+interface IBeforeInstallPromptEvent extends Event {
+  prompt(): unknown
+  showPrompt: () => void
+  userChoice: Promise<{ outcome: 'accepted' | 'dismissed'; platform: string }>
+}
+
 const InstallationButton = () => {
-  const installationPrompt = useAppSelector(
-    (state) => state.installationPromptReducer
-  )
-  const dispatch = useAppDispatch()
+  const [installationPrompt, setInstallationPrompt] =
+    useState<IBeforeInstallPromptEvent | null>(null)
 
   useEffect(() => {
     const handleBeforeInstallPrompt = (e: IBeforeInstallPromptEvent) => {
       // Prevent Chrome 67 and earlier from automatically showing the prompt
       e.preventDefault()
       // Stash the event so it can be triggered later
-      dispatch(updateInstallationPrompt({ value: e }))
+      setInstallationPrompt(e)
     }
     window.addEventListener(
       'beforeinstallprompt',
@@ -33,14 +32,14 @@ const InstallationButton = () => {
   }, [])
 
   const handleInstall = async () => {
-    if (!installationPrompt.value) return
-    await installationPrompt.value.prompt()
-    dispatch(updateInstallationPrompt({ value: null }))
+    if (!installationPrompt) return
+    await installationPrompt.prompt()
+    setInstallationPrompt(null)
   }
 
   return (
     <div>
-      {installationPrompt.value &&
+      {installationPrompt &&
         !sessionStorage.getItem('hideInstallationPrompt') && (
           <div className="fixed top-2 left-1/2 -translate-x-1/2 z-20 flex gap-4 items-center">
             <button onClick={handleInstall} className="Button w-[197px]">
@@ -48,7 +47,7 @@ const InstallationButton = () => {
             </button>
             <button
               onClick={() => {
-                dispatch(updateInstallationPrompt({ value: null }))
+                setInstallationPrompt(null)
                 sessionStorage.setItem('hideInstallationPrompt', 'true')
               }}
               className="Button max-h-min"
