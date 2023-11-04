@@ -6,6 +6,7 @@ import { updateOnlineStatus } from '../redux/features/onlineStatusSlice'
 const useCheckInternetConnection = () => {
   const dispatch = useAppDispatch()
   useEffect(() => {
+    dispatch(updateOnlineStatus({ value: navigator.onLine }))
     const handleOnline = () => {
       dispatch(updateOnlineStatus({ value: true }))
     }
@@ -18,7 +19,7 @@ const useCheckInternetConnection = () => {
       window.removeEventListener('online', handleOnline)
       window.removeEventListener('offline', handleOffline)
     }
-  }, [])
+  }, [dispatch])
 }
 
 export default useCheckInternetConnection
