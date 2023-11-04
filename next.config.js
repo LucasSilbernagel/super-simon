@@ -6,6 +6,15 @@ const withPWA = require('next-pwa')({
   register: true,
   disable: prod ? false : true,
   skipWaiting: true,
+  runtimeCaching: [
+    {
+      urlPattern: /\/_next\/static\/chunks\/pages\/.*/,
+      handler: 'CacheFirst', // Or any other strategy
+      options: {
+        cacheName: 'html-cache',
+      },
+    },
+  ],
 })
 
 module.exports = withPWA({
