@@ -13,6 +13,13 @@ import ErrorMessage from '../ErrorMessage/ErrorMessage'
 import { motion } from 'framer-motion'
 import { Howl } from 'howler'
 
+export const wedges = [
+  { label: 'green', style: 'bg-green-500 top-0 left-0' },
+  { label: 'red', style: 'bg-red-500 top-0 right-0' },
+  { label: 'yellow', style: 'bg-yellow-500 bottom-0 left-0' },
+  { label: 'blue', style: 'bg-blue-500 bottom-0 right-0' },
+]
+
 export default function GameBoard() {
   const gameStatus = useAppSelector((state) => state.gameStatusReducer)
   const selectedDifficulty = useAppSelector((state) => state.difficultyReducer)
@@ -36,13 +43,6 @@ export default function GameBoard() {
     gameStatus.value === 'UNSTARTED' ||
     isPlayingBotSequence ||
     gameStatus.value === 'FINISHED'
-
-  const wedges = [
-    { label: 'green', style: 'bg-green-500 top-0 left-0' },
-    { label: 'red', style: 'bg-red-500 top-0 right-0' },
-    { label: 'yellow', style: 'bg-yellow-500 bottom-0 left-0' },
-    { label: 'blue', style: 'bg-blue-500 bottom-0 right-0' },
-  ]
 
   const tone0 = new Howl({
     src: ['audio/0.mp3'],
@@ -239,6 +239,7 @@ export default function GameBoard() {
             className={`GameBoard ${
               isSuperSimonMode ? 'GameBoard--rotating' : ''
             }`}
+            data-testid="gameboard"
           >
             {wedges.map((wedge, index) => {
               return (
@@ -254,6 +255,7 @@ export default function GameBoard() {
                   }`}
                   onClick={() => handleWedgeClick(String(index))}
                   aria-label={wedge.label}
+                  data-testid={`wedge-${index}`}
                 />
               )
             })}
@@ -277,28 +279,29 @@ export default function GameBoard() {
                 className={`GameBoard__score ${
                   isSuperSimonMode ? 'GameBoard__score--rotating' : ''
                 }`}
+                data-testid="player-score"
               >
                 <div>{playerScore}</div>
               </div>
             )}
           </motion.div>
         )}
-        <EndgameModal
-          isModalOpen={isModalOpen}
-          setIsModalOpen={setIsModalOpen}
-          setBotSequence={setBotSequence}
-          setGameboardError={setGameboardError}
-          setPlayerSequence={setPlayerSequence}
-          categoryScores={categoryScores}
-          playerScore={playerScore}
-          setPlayerScore={setPlayerScore}
-        />
+        {isOnline.value && (
+          <EndgameModal
+            isModalOpen={isModalOpen}
+            setIsModalOpen={setIsModalOpen}
+            setBotSequence={setBotSequence}
+            setGameboardError={setGameboardError}
+            setPlayerSequence={setPlayerSequence}
+            categoryScores={categoryScores}
+            playerScore={playerScore}
+            setPlayerScore={setPlayerScore}
+          />
+        )}
       </>
     )
   } else
     return (
-      <ErrorMessage
-        errorText={`There was an issue loading the game, please try again later!`}
-      />
+      <ErrorMessage errorText="There was an issue loading the game, please try again later!" />
     )
 }
