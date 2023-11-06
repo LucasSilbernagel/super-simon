@@ -9,11 +9,11 @@ import { motion } from 'framer-motion'
 
 export type Difficulty = 'EASY' | 'NORMAL' | 'HARD' | 'SUPER SIMON'
 
+export const difficulties = ['EASY', 'NORMAL', 'HARD', 'SUPER SIMON']
+
 export default function Difficulty() {
   const gameStatus = useAppSelector((state) => state.gameStatusReducer)
   const dispatch = useAppDispatch()
-
-  const difficulties = ['EASY', 'NORMAL', 'HARD', 'SUPER SIMON']
 
   const getButtonColour = (difficulty: Difficulty) => {
     switch (difficulty) {

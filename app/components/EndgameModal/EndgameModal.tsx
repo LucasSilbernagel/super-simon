@@ -131,9 +131,10 @@ export default function EndgameModal(props: IEndgameModalProps) {
       }}
       style={modalStyles}
     >
-      <div>
+      <div data-testid="endgame-modal">
         <div className="w-full flex justify-end">
           <button
+            data-testid="close-modal-button"
             aria-label="Close modal"
             onClick={() => {
               dispatch(updateGameStatus({ value: 'PAGELOAD' }))
@@ -175,6 +176,7 @@ export default function EndgameModal(props: IEndgameModalProps) {
           <form
             onSubmit={(e) => handleSubmitScore(e)}
             className="flex flex-col items-center gap-2"
+            data-testid="new-score-form"
           >
             <label htmlFor="initials">Enter player initials:</label>
             <input
@@ -189,6 +191,7 @@ export default function EndgameModal(props: IEndgameModalProps) {
               value={playerInitials}
               onChange={(e) => handleInputChange(e)}
               className="border border-stone-400 text-2xl w-1/3 p-1 text-center font-bold"
+              data-testid="initials-input"
             />
             <button
               type="submit"
