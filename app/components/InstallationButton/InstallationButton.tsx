@@ -2,7 +2,7 @@
 import { useEffect, useState } from 'react'
 import { FaTimes } from 'react-icons/fa'
 
-interface IBeforeInstallPromptEvent extends Event {
+export interface IBeforeInstallPromptEvent extends Event {
   prompt(): unknown
   showPrompt: () => void
   userChoice: Promise<{ outcome: 'accepted' | 'dismissed'; platform: string }>
@@ -38,7 +38,7 @@ const InstallationButton = () => {
   }
 
   return (
-    <div>
+    <div data-testid="installation-button">
       {installationPrompt &&
         !sessionStorage.getItem('hideInstallationPrompt') && (
           <div className="fixed top-2 left-1/2 -translate-x-1/2 z-20 flex gap-4 items-center">

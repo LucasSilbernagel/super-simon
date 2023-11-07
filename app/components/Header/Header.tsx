@@ -69,7 +69,10 @@ const Header = () => {
           >
             Super Simon
           </h1>
-          <h2 className="text-xl sm:text-2xl leading-relaxed mt-8 px-2 sm:px-0">
+          <h2
+            className="text-xl sm:text-2xl leading-relaxed mt-8 px-2 sm:px-0"
+            data-testid="homepage-description"
+          >
             The classic memory game Simon, with a twist! <br /> How long of a
             sequence can you remember?
           </h2>
@@ -104,7 +107,11 @@ const Header = () => {
         </motion.div>
       )
   }
-  return <header className="text-center pt-12">{getHeader()}</header>
+  return (
+    <header data-testid="header" className="text-center pt-12">
+      {getHeader()}
+    </header>
+  )
 }
 
 export default Header
