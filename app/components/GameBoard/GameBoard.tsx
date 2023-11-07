@@ -24,6 +24,7 @@ export default function GameBoard() {
   const gameStatus = useAppSelector((state) => state.gameStatusReducer)
   const selectedDifficulty = useAppSelector((state) => state.difficultyReducer)
   const isOnline = useAppSelector((state) => state.onlineStatusReducer)
+  const isMuted = useAppSelector((state) => state.mutedReducer)
 
   const dispatch = useAppDispatch()
 
@@ -61,7 +62,9 @@ export default function GameBoard() {
 
   const handleWedgeClick = (id: string) => {
     setLastClickedWedge(id)
-    tones[id as keyof typeof tones].play()
+    if (!isMuted.value) {
+      tones[id as keyof typeof tones].play()
+    }
     const newPlayerSequence = [...playerSequence]
     newPlayerSequence.push(id)
     setPlayerSequence(newPlayerSequence)
@@ -103,7 +106,9 @@ export default function GameBoard() {
       await new Promise((resolve) => {
         setTimeout(() => {
           setBotClick(item)
-          tones[item as keyof typeof tones].play()
+          if (!isMuted.value) {
+            tones[item as keyof typeof tones].play()
+          }
           resolve(undefined)
           setTimeout(
             () => setBotClick(''),

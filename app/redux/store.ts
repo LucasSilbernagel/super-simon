@@ -6,11 +6,13 @@ import {
 import difficultyReducer from './features/difficultySlice'
 import gameStatusReducer from './features/gameStatusSlice'
 import onlineStatusReducer from './features/onlineStatusSlice'
+import mutedReducer from './features/mutedSlice'
 
 const rootReducer = combineReducers({
   difficultyReducer,
   gameStatusReducer,
   onlineStatusReducer,
+  mutedReducer,
 })
 
 export const store = configureStore({
