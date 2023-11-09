@@ -7,6 +7,7 @@ const ErrorMessage = ({ errorText }: { errorText: string }) => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       className="mx-auto max-w-max flex justify-center items-center h-[200px] my-[173.5px] text-xl bg-white text-red-800 font-bold px-8"
+      data-testid="error-message"
     >
       <p>{errorText}</p>
     </motion.div>
