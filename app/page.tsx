@@ -3,6 +3,7 @@ import Difficulty from './components/Difficulty/Difficulty'
 import GameBoard from './components/GameBoard/GameBoard'
 import InstallationButton from './components/InstallationButton/InstallationButton'
 import LeaderboardLink from './components/LeaderboardLink/LeaderboardLink'
+import MuteButton from './components/MuteButton/MuteButton'
 
 export default function Home() {
   return (
@@ -10,6 +11,7 @@ export default function Home() {
       <InstallationButton />
       <Difficulty />
       <GameBoard />
+      <MuteButton />
       <LeaderboardLink />
     </CommonWrapper>
   )

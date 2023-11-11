@@ -13,19 +13,22 @@ const Footer = () => {
       className="pb-4"
     >
       {isOnline.value ? (
-        <p className="text-center">
+        <p data-testid="online-footer" className="text-center">
           Built by{' '}
           <a
             href="https://lucassilbernagel.com/"
             target="_blank"
             rel="noreferrer"
             className="Link"
+            data-testid="portfolio-link"
           >
             Lucas Silbernagel
           </a>
         </p>
       ) : (
-        <p className="text-center">Built by Lucas Silbernagel</p>
+        <p data-testid="offline-footer" className="text-center">
+          Built by Lucas Silbernagel
+        </p>
       )}
     </motion.footer>
   )

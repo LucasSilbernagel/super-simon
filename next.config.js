@@ -2,6 +2,7 @@
 
 const prod = process.env.NODE_ENV === 'production'
 
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const withPWA = require('next-pwa')({
   dest: 'public',
   register: true,
@@ -10,16 +11,18 @@ const withPWA = require('next-pwa')({
   exclude: [
     ({ asset }) => {
       if (
-        asset.name.startsWith("server/") ||
-        asset.name.match(/^((app-|^)build-manifest\.json|react-loadable-manifest\.json)$/)
+        asset.name.startsWith('server/') ||
+        asset.name.match(
+          /^((app-|^)build-manifest\.json|react-loadable-manifest\.json)$/
+        )
       ) {
-        return true;
+        return true
       }
-      if (!prod && !asset.name.startsWith("static/runtime/")) {
-        return true;
+      if (!prod && !asset.name.startsWith('static/runtime/')) {
+        return true
       }
-      return false;
-    }
+      return false
+    },
   ],
 })
 

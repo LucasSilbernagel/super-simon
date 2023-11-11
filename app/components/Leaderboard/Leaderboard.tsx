@@ -36,7 +36,7 @@ const Leaderboard = () => {
             allCollections[difficulty] = results
           } catch (error) {
             setLeaderboardError(true)
-            console.error(`Error fetching data for ${difficulty}: ${error}`)
+            // console.error(`Error fetching data for ${difficulty}: ${error}`)
           }
         })
       )
@@ -46,7 +46,7 @@ const Leaderboard = () => {
     if (isOnline.value) {
       fetchAllCollections()
     }
-  }, [])
+  }, [isOnline.value])
 
   const loadingVariants = {
     hidden: { opacity: 0 },
@@ -61,6 +61,7 @@ const Leaderboard = () => {
         animate="enter"
         transition={{ delay: 0.5 }}
         className="max-w-max mx-auto bg-white text-black my-12 p-8 rounded-md"
+        data-testid="leaderboard"
       >
         <Tabs
           defaultTab={difficulties.findIndex(
@@ -96,7 +97,7 @@ const Leaderboard = () => {
         />
       </motion.div>
     )
-  } else if (isLoading) {
+  } else if (isLoading && isOnline.value) {
     return (
       <div className="w-full flex justify-center items-center min-h-[531px]">
         <Loader />

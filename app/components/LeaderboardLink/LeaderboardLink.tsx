@@ -16,7 +16,11 @@ const LeaderboardLink = () => {
         transition={{ delay: 0.5 }}
         className={`absolute top-4 right-4 sm:top-4 sm:right-8 sm:text-lg ${orbitron.className} tracking-widest`}
       >
-        <Link href="/leaderboard" className="ArrowLink">
+        <Link
+          data-testid="leaderboard-link"
+          href="/leaderboard"
+          className="ArrowLink"
+        >
           <span>Leaderboard</span> <FaArrowRight className="ArrowRight" />
         </Link>
       </motion.div>
