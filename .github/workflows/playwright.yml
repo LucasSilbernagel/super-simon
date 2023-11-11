@@ -18,13 +18,20 @@ jobs:
     - name: Install Playwright Browsers
       run: npx playwright install --with-deps
 
-    - name: Fetch and Debug Vercel Deployments
+    - name: Fetch and Set Vercel Preview URL
       run: |
         PR_NUMBER=${{ github.event.pull_request.number }}
         DEPLOYMENTS=$(curl -H "Authorization: Bearer ${{ secrets.VERCEL_TOKEN }}" "https://api.vercel.com/v5/now/deployments")
-        echo "Deployments: $DEPLOYMENTS"
+        PREVIEW_URL=$(echo $DEPLOYMENTS | jq -r --arg prNum "$PR_NUMBER" '.deployments[] | select(.meta.githubPrId == $prNum).url')
+        if [ -z "$PREVIEW_URL" ]
+        then
+          echo "No preview URL found for PR $PR_NUMBER"
+        else
+          echo "VERCEL_PREVIEW_URL=https://$PREVIEW_URL" >> $GITHUB_ENV
+        fi
       env:
         VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+
 
     # Run Playwright tests
     - name: Run Playwright tests
