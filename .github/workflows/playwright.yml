@@ -18,11 +18,11 @@ jobs:
     - name: Install Playwright Browsers
       run: npx playwright install --with-deps
 
-    - name: Fetch and Debug Vercel Deployments
-  run: |
-    PR_NUMBER=${{ github.event.pull_request.number }}
-    DEPLOYMENTS=$(curl -H "Authorization: Bearer ${{ secrets.VERCEL_TOKEN }}" "https://api.vercel.com/v5/now/deployments")
-    echo "Deployments: $DEPLOYMENTS"
+  - name: Fetch and Debug Vercel Deployments
+    run: |
+      PR_NUMBER=${{ github.event.pull_request.number }}
+      DEPLOYMENTS=$(curl -H "Authorization: Bearer ${{ secrets.VERCEL_TOKEN }}" "https://api.vercel.com/v5/now/deployments")
+      echo "Deployments: $DEPLOYMENTS"
 
 
     # Fetch Vercel Preview URL
