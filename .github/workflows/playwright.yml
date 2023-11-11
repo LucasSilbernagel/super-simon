@@ -1,7 +1,9 @@
 name: Playwright Tests
+
 on:
   pull_request:
     branches: [ main ]
+
 jobs:
   test:
     timeout-minutes: 60
@@ -15,8 +17,24 @@ jobs:
       run: npm ci
     - name: Install Playwright Browsers
       run: npx playwright install --with-deps
+
+    # Fetch Vercel Preview URL
+    - name: Fetch Vercel Preview URL
+      id: vercel
+      run: |
+        PR_NUMBER=${{ github.event.pull_request.number }}
+        DEPLOYMENTS=$(curl -H "Authorization: Bearer ${{ secrets.VERCEL_TOKEN }}" "https://api.vercel.com/v5/now/deployments")
+        PREVIEW_URL=$(echo $DEPLOYMENTS | jq -r '.deployments[] | select(.name == "super-simon" and .meta.githubCommitRef == "refs/pull/'"$PR_NUMBER"'/merge").url')
+        echo "VERCEL_PREVIEW_URL=https://$PREVIEW_URL" >> $GITHUB_ENV
+      env:
+        VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+
+    # Run Playwright tests
     - name: Run Playwright tests
       run: npx playwright test
+      env:
+        VERCEL_PREVIEW_URL: ${{ env.VERCEL_PREVIEW_URL }}
+
     - uses: actions/upload-artifact@v3
       if: always()
       with:
