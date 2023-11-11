@@ -40,3 +40,9 @@ next-env.d.ts
 # Progressive Web App
 public/workbox-*.js
 public/sw.js
+
+# Playwright tests
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
