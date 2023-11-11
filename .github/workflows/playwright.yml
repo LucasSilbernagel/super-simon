@@ -27,11 +27,10 @@ jobs:
         then
           echo "No preview URL found for PR $PR_NUMBER"
         else
-          echo "VERCEL_PREVIEW_URL=https://$PREVIEW_URL" >> $GITHUB_ENV
+          echo "VERCEL_PREVIEW_URL=$PREVIEW_URL" >> $GITHUB_ENV
         fi
       env:
         VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
-
 
     # Run Playwright tests
     - name: Run Playwright tests
