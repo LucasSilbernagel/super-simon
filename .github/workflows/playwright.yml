@@ -27,6 +27,10 @@ jobs:
         then
           echo "No preview URL found for PR $PR_NUMBER"
         else
+          # Ensure the URL starts with https://
+          if [[ $PREVIEW_URL != http* ]]; then
+            PREVIEW_URL="https://$PREVIEW_URL"
+          fi
           echo "VERCEL_PREVIEW_URL=$PREVIEW_URL" >> $GITHUB_ENV
         fi
       env:
