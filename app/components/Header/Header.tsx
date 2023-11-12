@@ -67,7 +67,7 @@ const Header = () => {
           <h1
             className={`text-4xl sm:text-6xl my-4 ${orbitron.className} tracking-wide`}
           >
-            Superr Simon
+            Super Simon
           </h1>
           <h2
             className="text-xl sm:text-2xl leading-relaxed mt-8 px-2 sm:px-0"
