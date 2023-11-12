@@ -6,5 +6,5 @@ test('has title', async ({ page }) => {
   console.log(`PR preview URL: ${process.env.VERCEL_PREVIEW_URL}`)
 
   await expect(page).toHaveTitle(/Super Simon/)
-  await expect(page.locator('text=Superr Simon')).toBeVisible()
+  await expect(page.locator('text=Super Simon')).toBeVisible()
 })
