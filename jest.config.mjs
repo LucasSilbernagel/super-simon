@@ -7,7 +7,7 @@ const createJestConfig = nextJest({
 /** @type {import('jest').Config} */
 const config = {
   testEnvironment: 'jest-environment-jsdom',
-  modulePathIgnorePatterns: ['tests'],
+  modulePathIgnorePatterns: ['e2e'],
 }
 
 export default createJestConfig(config)
