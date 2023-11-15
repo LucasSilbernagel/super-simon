@@ -48,7 +48,11 @@ const Tabs = ({ tabs, defaultTab = 0 }: ITabArrayProps) => {
   return (
     <>
       <div className="TabsWrapper" data-testid="tabs-wrapper">
-        <nav aria-label="secondary" className="Tabs" data-testid="tabs">
+        <nav
+          aria-label="high scores by difficulty"
+          className="Tabs"
+          data-testid="tabs"
+        >
           {/* Mobile view */}
           <div
             className="m-0 flex md:hidden"
