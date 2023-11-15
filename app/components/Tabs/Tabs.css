@@ -7,6 +7,10 @@
   @apply  bg-white cursor-pointer text-base border-none text-black whitespace-nowrap;
 }
 
+.Tabs__dropdown-toggle {
+  @apply text-2xl;
+}
+
 .Tabs__button {
   @apply transition-all duration-300 p-4 relative uppercase font-bold;
 }

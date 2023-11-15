@@ -4,7 +4,7 @@ import useCloseOnEscape from '@/app/hooks/useCloseOnEscape'
 import useOutsideClick from '@/app/hooks/useOutsideClick'
 import { BiDotsHorizontalRounded } from 'react-icons/bi'
 
-export const MOBILE_TAB_COUNT = 3
+export const MOBILE_TAB_COUNT = 2
 
 export interface ITabProps {
   /** Text within the tab button */
@@ -76,7 +76,7 @@ const Tabs = ({ tabs, defaultTab = 0 }: ITabArrayProps) => {
               )
             })}
             {tabs.length > MOBILE_TAB_COUNT && (
-              <div className="flex relative">
+              <div className="flex relative ml-4">
                 <button
                   role="tab"
                   onClick={() => toggleShowMobileDropdown(!showMobileDropdown)}
