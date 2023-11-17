@@ -109,6 +109,10 @@ export default function GameBoard() {
           if (!isMuted.value) {
             tones[item as keyof typeof tones].play()
           }
+          const announcedColor = wedges[Number(item)].label
+          if (announcedColor) {
+            updateAriaLiveRegion(announcedColor)
+          }
           resolve(undefined)
           setTimeout(
             () => setBotClick(''),
@@ -123,6 +127,13 @@ export default function GameBoard() {
     setTimeout(() => {
       setBotClick('')
     }, getDifficultySpeed(selectedDifficulty.value))
+  }
+
+  const updateAriaLiveRegion = (text: string) => {
+    const liveRegion = document.getElementById('aria-live-region')
+    if (liveRegion) {
+      liveRegion.textContent = text
+    }
   }
 
   useEffect(() => {
@@ -246,6 +257,11 @@ export default function GameBoard() {
             }`}
             data-testid="gameboard"
           >
+            <div
+              id="aria-live-region"
+              aria-live="assertive"
+              className="sr-only"
+            ></div>
             {wedges.map((wedge, index) => {
               return (
                 <button
