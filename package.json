@@ -23,7 +23,6 @@
     "react": "latest",
     "react-dom": "latest",
     "react-icons": "^4.11.0",
-    "react-modal": "^3.16.1",
     "react-redux": "^8.1.3"
   },
   "devDependencies": {
@@ -36,7 +35,6 @@
     "@types/node": "latest",
     "@types/react": "latest",
     "@types/react-dom": "latest",
-    "@types/react-modal": "^3.16.1",
     "@typescript-eslint/eslint-plugin": "^5.62.0",
     "@typescript-eslint/parser": "^5.62.0",
     "autoprefixer": "latest",

@@ -36,9 +36,7 @@ test.describe('pageload', () => {
     await expect(
       page.getByRole('heading', { name: 'Leaderboard' })
     ).toBeVisible()
-    for (const difficulty of difficulties.filter(
-      (difficulty) => difficulty !== 'SUPER SIMON'
-    )) {
+    for (const difficulty of difficulties.slice(0, 2)) {
       await expect(page.getByRole('tab', { name: difficulty })).toBeVisible()
     }
     await expect(page.getByTestId('tab-content-wrapper')).toBeVisible()

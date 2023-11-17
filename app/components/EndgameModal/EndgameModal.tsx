@@ -1,10 +1,17 @@
-'use client'
-
+/* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
+/* eslint-disable jsx-a11y/no-static-element-interactions */
+/* eslint-disable jsx-a11y/click-events-have-key-events */
 import { updateGameStatus } from '@/app/redux/features/gameStatusSlice'
 import { useAppDispatch, useAppSelector } from '../../redux/hooks'
 import './EndgameModal.css'
-import { Dispatch, FormEvent, SetStateAction, useEffect, useState } from 'react'
-import Modal from 'react-modal'
+import {
+  Dispatch,
+  FormEvent,
+  SetStateAction,
+  useEffect,
+  useState,
+  useRef,
+} from 'react'
 import { FaTimes } from 'react-icons/fa'
 import addToCollection from '@/app/firebase/addData'
 import { useRouter } from 'next/navigation'
@@ -34,36 +41,43 @@ export default function EndgameModal(props: IEndgameModalProps) {
   } = props
 
   const isOnline = useAppSelector((state) => state.onlineStatusReducer)
-
-  const { push } = useRouter()
   const selectedDifficulty = useAppSelector((state) => state.difficultyReducer)
-
+  const { push } = useRouter()
   const dispatch = useAppDispatch()
-
-  const modalStyles = {
-    overlay: {
-      backgroundColor: 'rgba(0, 0, 0, 0.3)',
-    },
-    content: {
-      top: '40%',
-      left: '50%',
-      right: 'auto',
-      bottom: 'auto',
-    },
-  }
 
   const [shouldPostNewRecord, setShouldPostNewRecord] = useState(false)
   const [playerInitials, setPlayerInitials] = useState('')
 
-  useEffect(() => {
-    Modal.setAppElement('body')
-  }, [])
+  const dialogRef = useRef<HTMLDialogElement>(null)
+
+  const closeModal = () => {
+    setIsModalOpen(false)
+    dispatch(updateGameStatus({ value: 'PAGELOAD' }))
+    setPlayerScore(0)
+    setPlayerSequence([])
+    setBotSequence([])
+    setPlayerInitials('')
+  }
 
   useEffect(() => {
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        closeModal()
+      }
+    }
     if (isModalOpen) {
-      document.body.style.overflowY = 'hidden'
-    } else document.body.style.overflowY = 'visible'
-  }, [isModalOpen])
+      dialogRef.current?.showModal()
+      document.body.style.overflow = 'hidden'
+      document.addEventListener('keydown', handleEscape)
+    } else if (dialogRef.current && dialogRef.current.open) {
+      dialogRef.current.close()
+      document.body.style.overflow = ''
+      document.removeEventListener('keydown', handleEscape)
+    }
+    return () => {
+      document.removeEventListener('keydown', handleEscape)
+    }
+  }, [isModalOpen, closeModal])
 
   useEffect(() => {
     if (
@@ -107,10 +121,10 @@ export default function EndgameModal(props: IEndgameModalProps) {
     if (playerInitials.length > 1 && playerInitials.length < 4) {
       addNewHighScore(playerInitials)
       setTimeout(() => {
+        setIsModalOpen(false)
         setPlayerScore(0)
         setPlayerSequence([])
         setBotSequence([])
-        setIsModalOpen(false)
         setPlayerInitials('')
         push('/leaderboard')
         dispatch(updateGameStatus({ value: 'PAGELOAD' }))
@@ -119,31 +133,13 @@ export default function EndgameModal(props: IEndgameModalProps) {
   }
 
   return (
-    <Modal
-      isOpen={isModalOpen}
-      onRequestClose={() => {
-        dispatch(updateGameStatus({ value: 'PAGELOAD' }))
-        setPlayerScore(0)
-        setPlayerSequence([])
-        setBotSequence([])
-        setIsModalOpen(false)
-        setPlayerInitials('')
-      }}
-      style={modalStyles}
-    >
-      <div data-testid="endgame-modal">
+    <dialog ref={dialogRef} onClick={closeModal} className="EndgameModal">
+      <div data-testid="endgame-modal" onClick={(e) => e.stopPropagation()}>
         <div className="w-full flex justify-end">
           <button
             data-testid="close-modal-button"
             aria-label="Close modal"
-            onClick={() => {
-              dispatch(updateGameStatus({ value: 'PAGELOAD' }))
-              setPlayerScore(0)
-              setPlayerSequence([])
-              setBotSequence([])
-              setIsModalOpen(false)
-              setPlayerInitials('')
-            }}
+            onClick={closeModal}
             className="text-2xl hover:scale-105"
           >
             <FaTimes />
@@ -158,14 +154,7 @@ export default function EndgameModal(props: IEndgameModalProps) {
         {!shouldPostNewRecord || !isOnline.value ? (
           <div className="text-center my-2">
             <button
-              onClick={() => {
-                dispatch(updateGameStatus({ value: 'PAGELOAD' }))
-                setPlayerScore(0)
-                setPlayerSequence([])
-                setBotSequence([])
-                setIsModalOpen(false)
-                setPlayerInitials('')
-              }}
+              onClick={closeModal}
               className={`Button ${orbitron.className} tracking-widest`}
             >
               Play again?
@@ -202,6 +191,6 @@ export default function EndgameModal(props: IEndgameModalProps) {
           </form>
         )}
       </div>
-    </Modal>
+    </dialog>
   )
 }

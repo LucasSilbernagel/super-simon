@@ -2,8 +2,6 @@ import '@testing-library/jest-dom'
 import { screen, fireEvent, waitFor } from '@testing-library/react'
 import EndgameModal from './EndgameModal'
 import { renderWithProviders } from '@/app/utils/test-utils'
-import ReactModal from 'react-modal'
-ReactModal.setAppElement('*')
 
 jest.mock('next/navigation', () => ({
   useRouter() {
@@ -14,6 +12,12 @@ jest.mock('next/navigation', () => ({
 }))
 
 describe('EndgameModal', () => {
+  beforeEach(() => {
+    // Mock the showModal and close methods of the dialog element
+    window.HTMLDialogElement.prototype.showModal = jest.fn()
+    window.HTMLDialogElement.prototype.close = jest.fn()
+  })
+
   const mockProps = {
     isModalOpen: true,
     categoryScores: [
