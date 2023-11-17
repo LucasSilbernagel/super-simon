@@ -307,16 +307,18 @@ export default function GameBoard() {
             )}
           </motion.div>
         )}
-        <EndgameModal
-          isModalOpen={isModalOpen}
-          setIsModalOpen={setIsModalOpen}
-          setBotSequence={setBotSequence}
-          setGameboardError={setGameboardError}
-          setPlayerSequence={setPlayerSequence}
-          categoryScores={categoryScores}
-          playerScore={playerScore}
-          setPlayerScore={setPlayerScore}
-        />
+        {gameStatus.value === 'FINISHED' && (
+          <EndgameModal
+            isModalOpen={isModalOpen}
+            setIsModalOpen={setIsModalOpen}
+            setBotSequence={setBotSequence}
+            setGameboardError={setGameboardError}
+            setPlayerSequence={setPlayerSequence}
+            categoryScores={categoryScores}
+            playerScore={playerScore}
+            setPlayerScore={setPlayerScore}
+          />
+        )}
       </>
     )
   } else
