@@ -1,6 +1,7 @@
 'use client'
 import { useEffect, useState } from 'react'
 import { FaTimes } from 'react-icons/fa'
+import { motion } from 'framer-motion'
 
 export interface IBeforeInstallPromptEvent extends Event {
   prompt(): unknown
@@ -37,8 +38,19 @@ const InstallationButton = () => {
     setInstallationPrompt(null)
   }
 
+  const loadingVariants = {
+    hidden: { opacity: 0 },
+    enter: { opacity: 1 },
+  }
+
   return (
-    <div data-testid="installation-button">
+    <motion.div
+      variants={loadingVariants}
+      initial="hidden"
+      animate="enter"
+      transition={{ duration: 3 }}
+      data-testid="installation-button"
+    >
       {installationPrompt &&
         !sessionStorage.getItem('hideInstallationPrompt') && (
           <div className="fixed top-2 left-1/2 -translate-x-1/2 z-20 flex gap-4 items-center">
@@ -57,7 +69,7 @@ const InstallationButton = () => {
             </button>
           </div>
         )}
-    </div>
+    </motion.div>
   )
 }
 
