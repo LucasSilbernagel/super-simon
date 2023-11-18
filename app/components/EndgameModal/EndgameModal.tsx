@@ -65,19 +65,26 @@ export default function EndgameModal(props: IEndgameModalProps) {
         closeModal()
       }
     }
+    const handleModal = (isOpen: boolean) => {
+      if (isOpen) {
+        document.body.style.overflow = 'hidden'
+        document.addEventListener('keydown', handleEscape)
+      } else {
+        document.body.style.overflow = ''
+        document.removeEventListener('keydown', handleEscape)
+      }
+    }
     if (isModalOpen) {
       dialogRef.current?.showModal()
-      document.body.style.overflow = 'hidden'
-      document.addEventListener('keydown', handleEscape)
+      handleModal(true)
     } else if (dialogRef.current && dialogRef.current.open) {
       dialogRef.current.close()
-      document.body.style.overflow = ''
-      document.removeEventListener('keydown', handleEscape)
+      handleModal(false)
     }
     return () => {
-      document.removeEventListener('keydown', handleEscape)
+      handleModal(false)
     }
-  }, [isModalOpen, closeModal])
+  }, [isModalOpen])
 
   useEffect(() => {
     if (
