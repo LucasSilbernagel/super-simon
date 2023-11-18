@@ -21,6 +21,30 @@ describe('GameBoard', () => {
       },
     })
     waitFor(() => {
+      expect(
+        screen.getByText('Announce color sequence for accessibility')
+      ).toBeInTheDocument()
+      expect(screen.queryByTestId('aria-live-region')).toBeNull()
+      fireEvent.click(
+        screen.getByText('Announce color sequence for accessibility')
+      )
+      expect(
+        screen.queryByText('Announce color sequence for accessibility')
+      ).toBeNull()
+      expect(
+        screen.getByText('Stop announcing color sequence for accessibility')
+      ).toBeInTheDocument()
+      expect(screen.getByTestId('aria-live-region')).toBeInTheDocument()
+      fireEvent.click(
+        screen.getByText('Stop announcing color sequence for accessibility')
+      )
+      expect(
+        screen.queryByText('Stop announcing color sequence for accessibility')
+      ).toBeNull()
+      expect(
+        screen.getByText('Announce color sequence for accessibility')
+      ).toBeInTheDocument()
+      expect(screen.queryByTestId('aria-live-region')).toBeNull()
       expect(screen.getByTestId('gameboard')).toBeInTheDocument()
       expect(screen.getByTestId('gameboard')).not.toHaveClass(
         'GameBoard--rotating'
@@ -47,6 +71,30 @@ describe('GameBoard', () => {
       },
     })
     waitFor(() => {
+      expect(
+        screen.getByText('Announce color sequence for accessibility')
+      ).toBeInTheDocument()
+      expect(screen.queryByTestId('aria-live-region')).toBeNull()
+      fireEvent.click(
+        screen.getByText('Announce color sequence for accessibility')
+      )
+      expect(
+        screen.queryByText('Announce color sequence for accessibility')
+      ).toBeNull()
+      expect(
+        screen.getByText('Stop announcing color sequence for accessibility')
+      ).toBeInTheDocument()
+      expect(screen.getByTestId('aria-live-region')).toBeInTheDocument()
+      fireEvent.click(
+        screen.getByText('Stop announcing color sequence for accessibility')
+      )
+      expect(
+        screen.queryByText('Stop announcing color sequence for accessibility')
+      ).toBeNull()
+      expect(
+        screen.getByText('Announce color sequence for accessibility')
+      ).toBeInTheDocument()
+      expect(screen.queryByTestId('aria-live-region')).toBeNull()
       expect(screen.getByTestId('gameboard')).toBeInTheDocument()
       wedges.forEach((wedge, index) => {
         expect(screen.getByTestId(`wedge-${index}`)).toBeInTheDocument()
@@ -69,6 +117,30 @@ describe('GameBoard', () => {
       },
     })
     waitFor(() => {
+      expect(
+        screen.getByText('Announce color sequence for accessibility')
+      ).toBeInTheDocument()
+      expect(screen.queryByTestId('aria-live-region')).toBeNull()
+      fireEvent.click(
+        screen.getByText('Announce color sequence for accessibility')
+      )
+      expect(
+        screen.queryByText('Announce color sequence for accessibility')
+      ).toBeNull()
+      expect(
+        screen.getByText('Stop announcing color sequence for accessibility')
+      ).toBeInTheDocument()
+      expect(screen.getByTestId('aria-live-region')).toBeInTheDocument()
+      fireEvent.click(
+        screen.getByText('Stop announcing color sequence for accessibility')
+      )
+      expect(
+        screen.queryByText('Stop announcing color sequence for accessibility')
+      ).toBeNull()
+      expect(
+        screen.getByText('Announce color sequence for accessibility')
+      ).toBeInTheDocument()
+      expect(screen.queryByTestId('aria-live-region')).toBeNull()
       expect(screen.getByTestId('gameboard')).toBeInTheDocument()
       expect(screen.getByTestId('gameboard')).toHaveClass('GameBoard--rotating')
       expect(screen.getByTestId('player-score')).toBeInTheDocument()
@@ -88,6 +160,30 @@ describe('GameBoard', () => {
       },
     })
     waitFor(() => {
+      expect(
+        screen.getByText('Announce color sequence for accessibility')
+      ).toBeInTheDocument()
+      expect(screen.queryByTestId('aria-live-region')).toBeNull()
+      fireEvent.click(
+        screen.getByText('Announce color sequence for accessibility')
+      )
+      expect(
+        screen.queryByText('Announce color sequence for accessibility')
+      ).toBeNull()
+      expect(
+        screen.getByText('Stop announcing color sequence for accessibility')
+      ).toBeInTheDocument()
+      expect(screen.getByTestId('aria-live-region')).toBeInTheDocument()
+      fireEvent.click(
+        screen.getByText('Stop announcing color sequence for accessibility')
+      )
+      expect(
+        screen.queryByText('Stop announcing color sequence for accessibility')
+      ).toBeNull()
+      expect(
+        screen.getByText('Announce color sequence for accessibility')
+      ).toBeInTheDocument()
+      expect(screen.queryByTestId('aria-live-region')).toBeNull()
       expect(screen.getByTestId('gameboard')).toBeInTheDocument()
       wedges.forEach((wedge, index) => {
         expect(screen.getByTestId(`wedge-${index}`)).toBeInTheDocument()

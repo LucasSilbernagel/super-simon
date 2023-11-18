@@ -39,6 +39,7 @@ export default function GameBoard() {
     { id: string; player: string; score: number }[]
   >([])
   const [gameboardError, setGameboardError] = useState(false)
+  const [accessibilityMode, setAccessibilityMode] = useState(false)
 
   const areWedgesDisabled =
     gameStatus.value === 'UNSTARTED' ||
@@ -110,8 +111,13 @@ export default function GameBoard() {
             tones[item as keyof typeof tones].play()
           }
           const announcedColor = wedges[Number(item)].label
-          if (announcedColor) {
-            updateAriaLiveRegion(announcedColor)
+          if (accessibilityMode) {
+            if (announcedColor) {
+              updateAriaLiveRegion(announcedColor)
+              setTimeout(() => {
+                updateAriaLiveRegion('')
+              }, 100)
+            }
           }
           resolve(undefined)
           setTimeout(
@@ -257,11 +263,22 @@ export default function GameBoard() {
             }`}
             data-testid="gameboard"
           >
-            <div
-              id="aria-live-region"
-              aria-live="assertive"
+            <button
               className="sr-only"
-            ></div>
+              onClick={() => setAccessibilityMode(!accessibilityMode)}
+            >
+              {accessibilityMode
+                ? 'Stop announcing color sequence for accessibility'
+                : 'Announce color sequence for accessibility'}
+            </button>
+            {accessibilityMode && (
+              <div
+                id="aria-live-region"
+                aria-live="assertive"
+                className="sr-only"
+                data-testid="aria-live-region"
+              ></div>
+            )}
             {wedges.map((wedge, index) => {
               return (
                 <button
