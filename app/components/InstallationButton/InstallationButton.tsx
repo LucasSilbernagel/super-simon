@@ -12,6 +12,7 @@ export interface IBeforeInstallPromptEvent extends Event {
 const InstallationButton = () => {
   const [installationPrompt, setInstallationPrompt] =
     useState<IBeforeInstallPromptEvent | null>(null)
+  const [isButtonLoaded, setIsButtonLoaded] = useState(false)
 
   useEffect(() => {
     const handleBeforeInstallPrompt = (e: IBeforeInstallPromptEvent) => {
@@ -24,11 +25,15 @@ const InstallationButton = () => {
       'beforeinstallprompt',
       handleBeforeInstallPrompt as EventListenerOrEventListenerObject
     )
+    const timer = setTimeout(() => {
+      setIsButtonLoaded(true)
+    }, 3000)
     return () => {
       window.removeEventListener(
         'beforeinstallprompt',
         handleBeforeInstallPrompt as EventListenerOrEventListenerObject
       )
+      clearTimeout(timer)
     }
   }, [])
 
@@ -38,39 +43,35 @@ const InstallationButton = () => {
     setInstallationPrompt(null)
   }
 
-  const loadingVariants = {
-    hidden: { opacity: 0 },
-    enter: { opacity: 1 },
-  }
-
-  return (
-    <motion.div
-      variants={loadingVariants}
-      initial="hidden"
-      animate="enter"
-      transition={{ duration: 3 }}
-      data-testid="installation-button"
-    >
-      {installationPrompt &&
-        !sessionStorage.getItem('hideInstallationPrompt') && (
-          <div className="fixed top-2 left-1/2 -translate-x-1/2 z-20 flex gap-4 items-center">
-            <button onClick={handleInstall} className="Button w-[197px]">
-              Install Super Simon
-            </button>
-            <button
-              onClick={() => {
-                setInstallationPrompt(null)
-                sessionStorage.setItem('hideInstallationPrompt', 'true')
-              }}
-              className="Button max-h-min"
-              aria-label="Do not install Super Simon on my device"
-            >
-              <FaTimes />
-            </button>
-          </div>
-        )}
-    </motion.div>
-  )
+  if (isButtonLoaded) {
+    return (
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        data-testid="installation-button"
+      >
+        {installationPrompt &&
+          !sessionStorage.getItem('hideInstallationPrompt') && (
+            <div className="fixed top-2 left-1/2 -translate-x-1/2 z-20 flex gap-4 items-center">
+              <button onClick={handleInstall} className="Button w-[197px]">
+                Install Super Simon
+              </button>
+              <button
+                onClick={() => {
+                  setInstallationPrompt(null)
+                  sessionStorage.setItem('hideInstallationPrompt', 'true')
+                }}
+                className="Button max-h-min"
+                aria-label="Do not install Super Simon on my device"
+              >
+                <FaTimes />
+              </button>
+            </div>
+          )}
+      </motion.div>
+    )
+  } else return null
 }
 
 export default InstallationButton
