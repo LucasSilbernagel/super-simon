@@ -2,7 +2,7 @@
 
 The classic memory game Simon, with a twist! How long of a sequence can you remember? Super Simon is a [Progressive Web App](https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps) that can be played on the web, installed on your device, and even played offline!
 
-![nexaTech](https://github.com/LucasSilbernagel/NexaTech/assets/57023164/aa45e652-fce3-47db-bb8c-9127e3a7d55e)
+![super-simon](https://github.com/LucasSilbernagel/super-simon/assets/57023164/d9372004-4360-43b7-af8c-78add4c8c35f)
 
 ## Live Link
 
