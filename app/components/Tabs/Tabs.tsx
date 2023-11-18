@@ -84,7 +84,11 @@ const Tabs = ({ tabs, defaultTab = 0 }: ITabArrayProps) => {
                 <button
                   role="tab"
                   onClick={() => toggleShowMobileDropdown(!showMobileDropdown)}
-                  className="Tabs__dropdown-toggle"
+                  className={`Tabs__dropdown-toggle ${
+                    tabs.indexOf(tabs[activeTab]) > MOBILE_TAB_COUNT - 1
+                      ? 'Tabs__dropdown-toggle--active'
+                      : ''
+                  }`}
                   aria-label="Toggle navigation dropdown"
                   aria-expanded={showMobileDropdown}
                   data-testid="tab-dropdown-toggle"
