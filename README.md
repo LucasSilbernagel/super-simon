@@ -1,36 +1,84 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Super Simon
 
-## Getting Started
+The classic memory game Simon, with a twist! How long of a sequence can you remember? Super Simon is a [Progressive Web App](https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps) that can be played on the web, installed on your device, and even played offline!
 
-First, run the development server:
+![nexaTech](https://github.com/LucasSilbernagel/NexaTech/assets/57023164/aa45e652-fce3-47db-bb8c-9127e3a7d55e)
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+## Live Link
+
+[https://super-simon-kappa.vercel.app/](https://super-simon-kappa.vercel.app/)
+
+## Tech Stack
+
+### Front End
+
+- [React](https://reactjs.org/)
+- [Next.js](https://nextjs.org/)
+- [TypeScript](https://www.typescriptlang.org/)
+- [Tailwind](https://tailwindcss.com/)
+- [Redux](https://redux.js.org/)
+- [next-pwa](https://www.npmjs.com/package/next-pwa)
+- [howler](https://howlerjs.com/)
+- [react-icons](https://www.npmjs.com/package/react-icons)
+- [framer-motion](https://www.framer.com/motion/)
+
+### Data storage (for the leaderboard)
+
+- [Firebase Cloud Firestore](https://firebase.google.com/docs/firestore)
+
+### Linting & Formatting
+
+- [eslint-config-lucas-silbernagel](https://www.npmjs.com/package/eslint-config-lucas-silbernagel)
+
+## Run Locally
+
+### Prerequisites
+
+In order to run this application locally, you must have node installed on your computer. To check if you already have it installed, enter `node -v` in your terminal. If you do not have node, you can install it here: https://nodejs.org/en/
+
+### Clone the repository
+
+Once you have confirmed that node is installed, `cd` into a folder on your computer and run the following command to clone the repository:
+
+`git clone https://github.com/LucasSilbernagel/super-simon.git`
+
+Then `cd` into the project folder and open it in your code editor. For Visual Studio Code:
+
+`cd super-simon`
+`code .`
+
+### Environment variables
+
+- Create a [Firebase Cloud Firestore](https://firebase.google.com/docs/firestore).
+- Create a `.env` file in the root of the `super-simon` project and save your Firebase credentials there as below:
+
+```
+NEXT_PUBLIC_FIREBASE_API_KEY=********************
+NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=*******************
+NEXT_PUBLIC_FIREBASE_PROJECT_ID=*********************
+NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=***********************
+NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=*************************
+NEXT_PUBLIC_FIREBASE_APP_ID=**************************
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Install dependencies
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+To install all of the required dependencies, run `npm install`.
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+### Start up the app
 
-## Learn More
+- To start up the app locally, run `npm run dev` in your terminal. Your terminal should indicate a `localhost` URL at which you can view the app in your browser, most likely http://localhost:3000/.
 
-To learn more about Next.js, take a look at the following resources:
+## Testing
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Unit Tests
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+Unit tests are written with [Jest](https://jestjs.io/) and [react-testing-library](https://testing-library.com/).
 
-## Deploy on Vercel
+Use `npm run test-unit` to run all unit tests, or use `npm run test-unit SomeFileToRun` to run a specific test file.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### E2E Tests
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+E2E tests are written with [Playwright](https://playwright.dev/).
+
+Use `npm run test-e2e` to run all E2E tests.
