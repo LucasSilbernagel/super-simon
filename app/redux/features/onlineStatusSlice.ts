@@ -5,7 +5,7 @@ type OnlineStatusState = {
 }
 
 const initialState = {
-  value: false,
+  value: true,
 } as OnlineStatusState
 export const onlineStatus = createSlice({
   name: 'isOnline',
